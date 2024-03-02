@@ -833,7 +833,7 @@
 </head>
 
 <body class="antialiased">
-<div x-data="{ open: true }">
+    <div x-data="{ open: true }">
         <!-- Sidebar -->
         <aside class="bg-gray-800 text-white w-64 h-screen fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
             <!-- Sidebar content -->
@@ -843,8 +843,13 @@
                 <ul>
                     <li class="mb-2"><a href="/home" class="text-gray-300 hover:text-white">Home</a></li>
                     <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Tasks</a></li>
-                    <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Projects</a></li>
-                    <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Settings</a></li>
+                    <li class="mb-2"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white">Role</a></li>
+                    <li class="mb-2"><a href="{{ route('permission.index') }}" class="text-gray-300 hover:text-white">Permission</a></li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <li class="mb-2"><a :href="route('logout')" onclick="event.preventDefault();
+                                                this.closest('form').submit();" class="text-gray-300 hover:text-white"><button>Logout</button></a></li>
+                    </form>
                 </ul>
             </div>
         </aside>
@@ -855,16 +860,14 @@
             <header class="bg-white shadow p-4">
                 <!-- Button to toggle the sidebar -->
                 <button @click="open = !open" class="text-gray-800 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"></path>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                     </svg>
                 </button>
             </header>
 
             @yield('content')
-            
+
         </div>
     </div>
 </body>
