@@ -1,0 +1,3 @@
+laravel
+tailwind
+npm i -D daisyui@latest
