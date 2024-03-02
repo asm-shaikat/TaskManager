@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\Administrator\HomeController;
+use App\Http\Controllers\Administrator\PermissionController;
+use App\Http\Controllers\Administrator\RoleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Contracts\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +19,24 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/home', function () {
+    return view('home');
+})->middleware(['auth', 'verified'])->name('home');
+
+Route::get('/administrator', function () {
+    return view('administrator.index');
+})->middleware(['auth', 'role:administrator'])->name('administrator.index');
+
+
+Route::middleware(['auth', 'role:administrator'])->prefix('administrator')->group(function(){
+    Route::resource('/',HomeController::class);
+    Route::resource('/role',RoleController::class);
+    Route::resource('/permission',PermissionController::class);
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
