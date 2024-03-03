@@ -30,7 +30,13 @@ class PermissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'permissionName' => 'required',
+        ]);
+        Permission::create([
+            'name' => $validate['permissionName'], 
+        ]);
+        return redirect()->back()->with('success', 'Permission created successfully');
     }
 
     /**
@@ -52,9 +58,15 @@ class PermissionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        $validate = $request->validate([
+            'edit_permission_name' => 'required',
+        ]);
+        $permission->update([
+            'name' => $validate['edit_permission_name'], 
+        ]);
+        return redirect()->back()->with('success', 'Permission created successfully');
     }
 
     /**

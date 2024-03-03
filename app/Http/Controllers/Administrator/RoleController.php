@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -30,7 +31,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'postName' => 'required',
+        ]);
+        Role::create([
+            'name' => $validate['postName'], 
+        ]);
+        return redirect()->back()->with('success', 'Role created successfully');
     }
 
     /**
@@ -52,9 +59,15 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,Role $role)
     {
-        //
+        $validate = $request->validate([
+            'edit_role_name' => 'required',
+        ]);
+        $role->update([
+            'name' => $validate['edit_role_name'], 
+        ]);
+        return redirect()->back()->with('success', 'Role created successfully');
     }
 
     /**
