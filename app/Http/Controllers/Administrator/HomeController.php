@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -12,7 +13,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('administrator.index');
+        $users = User::whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'administrator');
+        })->get();
+        return view('users.home',compact('users'));
+        // return view('administrator.index');
+    }
+
+    public function home(){
+        $users = User::all();
+        return view('home',compact('users'));
     }
 
     /**
@@ -58,8 +68,9 @@ class HomeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->back()->with('success', 'User deleted successfully');
     }
 }
