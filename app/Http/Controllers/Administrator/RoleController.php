@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrator;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -14,8 +15,9 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        return view('administrator.role.index',compact('roles'));
+        $roles = Role::whereNotIn('name', ['administrator'])->get();
+        $permissions = Permission::all();
+        return view('administrator.role.index',compact('roles','permissions'));
     }
 
     /**
@@ -73,8 +75,26 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Role $role)
     {
-        //
+        $role->delete();
+        return redirect()->back()->with('success', 'Role deleted successfully');
+    }
+
+    public function givenPermission(Request $request, Role $role){
+        if($role->hasPermissionTo($request->permission)){
+            return redirect()->back()->with('message', 'Permission Exists');
+        }
+        $role->givePermissionTo($request->permission);
+        return redirect()->back()->with('message', 'Permission Added');
+    }
+
+    public function removePermission(Role $role, Permission $permission){
+        if($role->hasPermissionTo($permission)){
+            $role->revokePermissionTo($permission);
+            return back()->with('message', 'Permission Deleted');
+        }
+        return back()->with('message', 'Permission Denied');
+
     }
 }

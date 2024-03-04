@@ -21,7 +21,11 @@
                     <td class="py-2 px-4 border-b">{{ $role->name }}</td>
                     <td class="flex justify-evenly items-center p-4">
                         <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded" onclick="editRole('{{ $role->id }}', '{{ $role->name }}')">Edit</button>
-                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                        <form action="{{ url('/administrator/role',$role->id) }}" onsubmit=" return confirm('Are you sure?')" method="post">
+                            @method('DELETE')
+                            @csrf
+                            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach
@@ -76,6 +80,39 @@
                     <button class="bg-green-500 hover:bg-green-900 text-white font-bold py-2 px-4 rounded mr-2" onclick="updateRole()">Update</button>
                 </div>
             </form>
+
+            <div class="button-container">
+                <p>Role Permission</p>
+                @if($role->permissions)
+                <div class="flex gap-1">
+                @foreach($role->permissions as $role_permission)
+                    <form action="{{ route('administrator.role.removePermissions', [$role->id, $role_permission->id]) }}" onsubmit="return confirm('Are you sure?')" method="post">
+                        @method('DELETE')
+                        @csrf
+                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{{ $role_permission->name }}</button>
+                    </form>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+            <form id="editForm" action="{{ route('administrator.role.permissions', $role->id) }}" method="post" class="py-4" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-4">
+                    <label for="permission" class="block text-sm font-medium text-gray-600 p-2">Permission</label>
+                    <select class="select select-bordered w-full" name="permission">
+                        <option disabled selected>Select a permission</option>
+                        @foreach($permissions as $permission)
+                        <option>{{ $permission->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <button onclick="document.getElementById('edit_modal').close()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">Close</button>
+                    <button class="bg-green-500 hover:bg-green-900 text-white font-bold py-2 px-4 rounded mr-2" onclick="updateRole()">Update</button>
+                </div>
+            </form>
+
 
             <p class="py-2">Press ESC key or click outside to close</p>
         </div>

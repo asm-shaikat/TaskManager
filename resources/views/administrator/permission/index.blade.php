@@ -19,7 +19,11 @@
                     <td class="py-2 px-4 border-b">{{ $singlePermission->name }}</td>
                     <td class="flex justify-evenly items-center p-4">
                         <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded" onclick="editPermission('{{ $singlePermission->id }}', '{{ $singlePermission->name }}')">Edit</button>
-                        <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                        <form action="{{ route('permission.destroy',$singlePermission->id) }}" method="post" onsubmit="return confirm('Are you sure?')">
+                            @method('DELETE')
+                            @csrf
+                            <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 @endforeach
