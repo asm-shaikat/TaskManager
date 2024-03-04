@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionController extends Controller
 {
@@ -13,9 +14,13 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permission = Permission::all();
-        return  view('administrator.permission.index',compact('permission'));
+        $permissions = Permission::all();
+        $roles = Role::whereNotIn('name', ['administrator'])->get();
+        $permission = Permission::first();
+
+        return view('administrator.permission.index', compact('permissions', 'roles', 'permission'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -50,9 +55,10 @@ class PermissionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Permission $permission)
     {
-        //
+        $roles = Role::all();
+        return view('administrator.permission.edit', compact('permission','roles'));
     }
 
     /**
@@ -77,4 +83,28 @@ class PermissionController extends Controller
         $permission->delete();
         return redirect()->back()->with('success', 'Permission deleted successfully');
     }
+
+    public function assignRole(Request $request, Permission $permission){
+        if($permission->hasRole($request->role)){
+            return back()->with('success', 'Role already exists');
+        }
+        $permission->assignRole($request->role);
+        return back()->with('success', 'Role assigned successfully');
+    }
+
+
+    public function removeRole($role, Permission $permission)
+    {
+        $roleName = is_object($role) ? $role->name : $role;
+
+        if ($permission->hasRole($roleName)) {
+            $permission->removeRole($roleName);
+            return back()->with('message', 'Role Removed successfully');
+        }
+
+        return back()->with('message', 'Permission Denied');
+    }
+
+    
+
 }
