@@ -838,20 +838,23 @@
         <aside class="bg-gray-800 text-white w-64 h-screen fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
             <!-- Sidebar content -->
             <div class="p-4">
-                <h1 class="text-2xl font-bold mb-4">Task Manager</h1>
-                <small class="p-8">Welcome {{ Auth::user()->name }}</small>
-                <ul>
-                    <li class="mb-2"><a href="/home" class="text-gray-300 hover:text-white">Home</a></li>
-                    <li class="mb-2"><a href="#" class="text-gray-300 hover:text-white">Tasks</a></li>
-                    <li class="mb-2"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white">Role</a></li>
-                    <li class="mb-2"><a href="{{ route('permission.index') }}" class="text-gray-300 hover:text-white">Permission</a></li>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <li class="mb-2"><a :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();" class="text-gray-300 hover:text-white"><button>Logout</button></a></li>
-                    </form>
-                </ul>
-            </div>
+    <h1 class="text-2xl font-bold mb-4">Task Manager</h1>
+    <small class="p-8">Welcome {{ Auth::user()->name }}</small>
+    <ul>
+        <!-- Remove the link to /home -->
+        <!-- <li class="mb-2"><a href="/home" class="text-gray-300 hover:text-white">Home</a></li> -->
+        
+        <!-- Adjust other links accordingly -->
+        <li class="mb-2"><a href="{{ route('task.index') }}" class="text-gray-300 hover:text-white">Tasks</a></li>
+        <li class="mb-2"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white">Role</a></li>
+        <li class="mb-2"><a href="{{ route('permission.index') }}" class="text-gray-300 hover:text-white">Permission</a></li>
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <li class="mb-2"><a :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-gray-300 hover:text-white"><button>Logout</button></a></li>
+        </form>
+    </ul>
+</div>
+
         </aside>
 
         <!-- Main content -->
