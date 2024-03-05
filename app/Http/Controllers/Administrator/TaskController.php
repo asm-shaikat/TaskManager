@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class TaskController extends Controller
@@ -16,15 +17,24 @@ class TaskController extends Controller
      */
     // app/Http/Controllers/TaskController.php
 
+
     public function index(Request $request)
     {
-        $query = Task::query();
+        // Check if the authenticated user has the administrator role
+        if (auth()->user()->hasRole('administrator')) {
+            // Retrieve all tasks for administrators
+            $query = Task::query();
+        } else {
+            // Retrieve tasks based on the currently authenticated user's ID
+            $query = Task::where('user_id', auth()->id());
+        }
     
         // Check if the title is provided in the request
         if ($request->has('title')) {
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         }
     
+        // Get the tasks
         $tasks = $query->get();
         $tasksCount = $tasks->count();
     
@@ -34,6 +44,8 @@ class TaskController extends Controller
             return view('task.index', compact('tasks', 'tasksCount'));
         }
     }
+    
+
     
 
     /**

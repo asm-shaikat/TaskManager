@@ -107,8 +107,7 @@
                     </select>
                 </div>
 
-                <div class="flex justify-between items-center">
-                    <button onclick="document.getElementById('edit_modal').close()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mr-2">Close</button>
+                <div class="flex justify-end items-center">
                     <button class="bg-green-500 hover:bg-green-900 text-white font-bold py-2 px-4 rounded mr-2" onclick="updateRole()">Update</button>
                 </div>
             </form>

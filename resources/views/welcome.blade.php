@@ -841,7 +841,6 @@
         <a href="/home" class="text-2xl font-bold mb-4 block">Task Manager</a>
         <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
         <ul>
-            <!-- Adjust other links accordingly -->
             <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('task.index') }}" class="text-gray-300 hover:text-white block">Tasks</a></li>
             @if (auth()->user()->hasRole('administrator'))
                 <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white block">Role</a></li>
