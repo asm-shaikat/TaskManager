@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrator;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -13,10 +14,13 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         $users = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'administrator');
         })->get();
-        return view('users.home',compact('users'));
+        $authid = auth()->user()->id;
+        $taskInfo =  DB::table('tasks')->where('user_id', $authid)->get();
+        return view('users.home',compact('users','taskInfo'));
         // return view('administrator.index');
     }
 
