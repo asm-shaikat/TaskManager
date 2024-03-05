@@ -1,5 +1,3 @@
-<!-- resources/views/task/index.blade.php -->
-
 @extends('welcome')
 
 @section('content')
@@ -13,7 +11,6 @@
         </div>
     </div>
     
-    <!-- Autocomplete Search Form -->
     <form action="{{ route('task.search') }}" method="get" id="autocomplete-form">
         <div class="mb-4">
             <label for="title" class="block text-sm font-medium text-gray-600">Search by Title</label>

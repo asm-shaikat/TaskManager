@@ -24,10 +24,10 @@
             </div>
 
             @if (auth()->user()->hasRole('administrator'))
-        @php
-        $nonAdminUsers = $users->reject(function ($user) {
-        return $user->hasRole('administrator');
-        });
+            @php
+            $nonAdminUsers = $users->reject(function ($user) {
+            return $user->hasRole('administrator');
+            });
         @endphp
         @if ($nonAdminUsers->isEmpty())
         <div class="mb-4 text-red-500">

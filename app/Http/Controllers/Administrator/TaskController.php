@@ -75,7 +75,6 @@ class TaskController extends Controller
     public function show(string $id)
     {
         $task = Task::findOrFail($id);
-        // dd($task);
         return view('task.show', compact('task'));
     }
 
@@ -85,7 +84,8 @@ class TaskController extends Controller
     public function edit($id)
     {
         $task = Task::findOrFail($id);
-        return view('task.update', compact('task'));
+        $users = User::all();
+        return view('task.update', compact('task','users'));
     }
 
     /**
