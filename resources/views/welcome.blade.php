@@ -836,30 +836,27 @@
     <div x-data="{ open: true }">
         <!-- Sidebar -->
         <aside class="bg-gray-800 text-white w-64 h-screen fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
-            <!-- Sidebar content -->
-            <div class="p-4">
-    <a href="/home">
-        <h1 class="text-2xl font-bold mb-4">Task Manager</h1>
-    </a>
-    <small class="p-8 text-xs font-serif">Welcome {{ Auth::user()->name }}</small>
-    <ul>
-        <!-- Remove the link to /home -->
-        <!-- <li class="mb-2"><a href="/home" class="text-gray-300 hover:text-white">Home</a></li> -->
-        
-        <!-- Adjust other links accordingly -->
-        <li class="mb-2"><a href="{{ route('task.index') }}" class="text-gray-300 hover:text-white">Tasks</a></li>
-        @if (auth()->user()->hasRole('administrator'))
-        <li class="mb-2"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white">Role</a></li>
-        <li class="mb-2"><a href="{{ route('permission.index') }}" class="text-gray-300 hover:text-white">Permission</a></li>
-        @endif
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <li class="mb-2"><a :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();" class="text-gray-300 hover:text-white"><button>Logout</button></a></li>
-        </form>
-    </ul>
-</div>
+    <!-- Sidebar content -->
+    <div class="p-4">
+        <a href="/home" class="text-2xl font-bold mb-4 block">Task Manager</a>
+        <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
+        <ul>
+            <!-- Adjust other links accordingly -->
+            <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('task.index') }}" class="text-gray-300 hover:text-white block">Tasks</a></li>
+            @if (auth()->user()->hasRole('administrator'))
+                <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white block">Role</a></li>
+                <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('permission.index') }}" class="text-gray-300 hover:text-white block">Permission</a></li>
+            @endif
+            <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you really want to logout?')">
+                @csrf
+                <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black">
+                    <button type="submit" class="text-gray-300 hover:text-white block focus:outline-none">Logout</button>
+                </li>
+            </form>
+        </ul>
+    </div>
+</aside>
 
-        </aside>
 
         <!-- Main content -->
         <div class="ml-64">
