@@ -40,8 +40,12 @@
             <div class="mb-4">
                 <h3 class="text-xl font-semibold">Comments</h3>
                 @foreach($comments as $comment)
-                <p>{{ $comment->content }}</p>
-                <a href="{{ asset($comment->attachments) }}" class="text-red-600" download>Download PDF</a>
+                <div class="bg-slate-500 mb-2 rounded-lg p-4 text-center">
+                    <p class="text-white">{{ $comment->content }}</p>
+                    @if($comment->attachments)
+                    <a href="{{ asset($comment->attachments) }}" class="text-red-600" download>Download PDF</a>
+                    @endif
+                </div>
                 @endforeach
             </div>
 
