@@ -9,7 +9,8 @@ class Comment extends Model
 {
     protected $fillable =[
         'task_id',
-        'conotent'
+        'content',
+        'attachments',
     ];
 
     public function task(){

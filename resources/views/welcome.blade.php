@@ -841,7 +841,7 @@
     <a href="/home">
         <h1 class="text-2xl font-bold mb-4">Task Manager</h1>
     </a>
-    <small class="p-8">Welcome {{ Auth::user()->name }}</small>
+    <small class="p-8 text-xs font-serif">Welcome {{ Auth::user()->name }}</small>
     <ul>
         <!-- Remove the link to /home -->
         <!-- <li class="mb-2"><a href="/home" class="text-gray-300 hover:text-white">Home</a></li> -->

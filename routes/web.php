@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('task',TaskController::class);
     Route::get('/tasks/search', [TaskController::class, 'index'])->name('task.search');
     Route::resource('comments',CommentController::class);
+    Route::get('/comments/{taskId}',[CommentController::class,'index'])->name('comments.index');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -10,9 +12,12 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($taskId)
     {
-        //
+        $task = Task::findOrFail($taskId);
+        $comments = $task->comments;
+
+        return view('comments.index', compact('comments'));
     }
 
     /**
@@ -28,8 +33,39 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $comment = new Comment([
+            'content' => $request->input('content'),
+            'task_id' => $request->input('task_id'),
+        ]);
+
+        if ($request->hasFile('attachment')) {
+            $request->validate([
+                'attachment' => 'required|mimes:pdf|max:2048',
+            ]);
+
+            $file = $request->file('attachment');
+            $extension = $file->getClientOriginalExtension();
+
+            $fileName = 'task_attachment_' . time() . '.' . $extension;
+            $location = '/uploads/attachment/';
+
+            $file->move(public_path() . $location, $fileName);
+
+            $attachmentLocation = $location . $fileName;
+
+            $comment->attachments = $attachmentLocation;
+        }
+
+        $comment->save();
+
+        return redirect()->route('task.show', $request->input('task_id'))->with('success', 'Comment added successfully');
     }
+
+
 
     /**
      * Display the specified resource.

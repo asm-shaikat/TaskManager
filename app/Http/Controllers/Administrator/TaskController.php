@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
+use App\Models\Comment;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -75,7 +76,8 @@ class TaskController extends Controller
     public function show(string $id)
     {
         $task = Task::findOrFail($id);
-        return view('task.show', compact('task'));
+        $comments = $task->comments;
+        return view('task.show', compact('task','comments'));
     }
 
     /**
