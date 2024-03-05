@@ -38,6 +38,3 @@ npm run dev
 #Login credential
 Email: administrator@gmail.com
 password: password
-## Demo
-
-Insert gif or link to demo
