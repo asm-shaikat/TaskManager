@@ -1,7 +1,7 @@
 @extends('welcome')
 
 @section('content')
-<div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
     <div class="flex justify-between">
         <div>
             <h2 class="text-2xl font-semibold mb-6">My Tasks</h2>
@@ -11,26 +11,20 @@
         </div>
     </div>
     
-    <form action="{{ route('task.search') }}" method="get" id="autocomplete-form">
-        <div class="mb-4">
-            <label for="title" class="block text-sm font-medium text-gray-600">Search by Title</label>
-            <input type="text" name="title" id="title" class="p-2 border rounded-md" autocomplete="off">
-        </div>
-    </form>
-    
     <div class="mb-4">
         <p class="text-gray-600">You have {{ $tasksCount }} tasks assigned.</p>
     </div>
 
     <div class="mb-4">
         @if($tasksCount > 0)
-        <table class="w-full border">
+        <table class="w-full p-4 border display" id="dtExample">
             <thead>
                 <tr>
-                    <th class="border p-2">Title</th>
-                    <th class="border p-2">Description</th>
-                    <th class="border p-2">Due Date</th>
-                    <th class="border p-2">Actions</th> <!-- New column for actions -->
+                    <th class="p-2">Title</th>
+                    <th class="p-2">Description</th>
+                    <th class="p-2">Priority</th>
+                    <th class="p-2">Due Date</th>
+                    <th class="p-2">Actions</th> <!-- New column for actions -->
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +34,7 @@
                         <a href="{{ route('task.show', $task) }}" class="text-blue-500 hover:underline">{{ $task->title }}</a>
                     </td>
                     <td class="border p-2">{{ $task->description }}</td>
+                    <td class="border p-2">{{ $task->priority }}</td>
                     <td class="border p-2">{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : 'Not set' }}</td>
                     <td class="border p-2">
                         <a href="{{ route('task.edit', $task->id) }}" class="text-green-500 hover:underline">Edit</a>
@@ -58,30 +53,5 @@
         @endif
     </div>
 </div>
-
-<!-- Include jQuery and Ajax script -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#title').on('input', function () {
-            // Delay before making the Ajax request to avoid too many requests while typing
-            setTimeout(function () {
-                // Get the form data
-                var formData = $('#autocomplete-form').serialize();
-
-                // Make the Ajax request
-                $.ajax({
-                    type: 'GET',
-                    url: '{{ route('task.search') }}',
-                    data: formData,
-                    success: function (data) {
-                        // Update the table with the new results
-                        $('#tasks-table').html(data);
-                    }
-                });
-            }, 500); // 500 milliseconds delay
-        });
-    });
-</script>
 
 @endsection

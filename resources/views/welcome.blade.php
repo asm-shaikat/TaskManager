@@ -13,7 +13,13 @@
     <link href="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
     @vite('resources/css/app.css')
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css">
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+
+
     <!-- Styles -->
+
     <style>
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */
         *,
@@ -874,6 +880,14 @@
     </div>
 
     @yield('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js">
+</script>
+<script>
+    $(document).ready( function () {
+    $('#dtExample').DataTable();
+} )
+</script>
 </body>
 
 </html>
