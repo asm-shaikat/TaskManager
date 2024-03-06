@@ -23,31 +23,24 @@
         </div>
 
         @if (auth()->user()->hasRole('administrator'))
-        @php
-        $nonAdminUsers = $users->reject(function ($user) {
-        return $user->hasRole('administrator');
-        });
-        @endphp
-        @if ($nonAdminUsers->isEmpty())
-        <div class="mb-4 text-red-500">
-            No users available for assignment. Please add users before creating tasks.
-        </div>
-        @else
-        <div class="mb-4">
-            <label for="user_id" class="block text-sm font-medium text-gray-600">Assign User</label>
-            <select name="user_id" id="user_id" class="mt-1 p-2 w-full border rounded-md" required>
-                <option disabled selected>Assign to a user</option>
-                @foreach ($nonAdminUsers as $user)
-                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-        @else
-        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-        @endif
+            @php
+            $nonAdminUsers = $users->reject(function ($user) {
+                return $user->hasRole('administrator');
+            });
+            @endphp
 
-
+            <div class="mb-4">
+                <label for="user_id" class="block text-sm font-medium text-gray-600">Assign User</label>
+                <select name="user_id" id="user_id" class="mt-1 p-2 w-full border rounded-md" required>
+                    <option value="{{ auth()->user()->id }}" selected>Assign to myself ({{ auth()->user()->name }})</option>
+                    @foreach ($nonAdminUsers as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @else
+            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+        @endif
 
         <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-gray-600">Description</label>
