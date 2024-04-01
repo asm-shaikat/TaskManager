@@ -1,9 +1,16 @@
 @extends('welcome')
-
+@section('title','User List')
 @section('content')
-<div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
+<div class="max-w-full mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
     @if (auth()->user()->hasRole('administrator'))
-    <h2 class="text-2xl font-semibold mb-6">User List</h2>
+    <div class="flex justify-between">
+        <div>
+            <h2 class="text-2xl font-semibold mb-6">Users List</h2>
+        </div>
+        <div>
+            <a href="{{ route('users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">ADD User</a>
+        </div>
+    </div>
     <table class="w-full border">
         <thead>
             <tr>
@@ -18,7 +25,7 @@
                 <td class="border p-2">{{ $user->name }}</td>
                 <td class="border p-2">{{ $user->email }}</td>
                 <td class="border p-2 text-center">
-                    <a href="{{ route('home.edit', $user->id) }}" class="text-blue-500 hover:underline">Edit</a>
+                    <a href="{{ route('users.edit', $user->id) }}" class="text-blue-500 hover:underline">Edit</a>
                 </td>
             </tr>
             @empty

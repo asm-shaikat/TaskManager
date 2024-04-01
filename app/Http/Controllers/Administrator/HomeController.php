@@ -29,12 +29,7 @@ class HomeController extends Controller
     public function index()
     {
 
-        $users = User::whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'administrator');
-        })->get();
-        $authid = auth()->user()->id;
-        $taskInfo =  DB::table('tasks')->where('user_id', $authid)->get();
-        return view('users.home',compact('users','taskInfo'));
+        
     }
 
     public function home(){
@@ -70,12 +65,7 @@ class HomeController extends Controller
      */
     public function edit(string $id)
     {   
-        $user = User::find($id);
-
-        if (!$user) {
-            return abort(404);
-        }    
-        return view('users.edit', compact('user'));
+        
     }
 
     /**
@@ -83,23 +73,7 @@ class HomeController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return abort(404);
-        }
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-        ]);
-
-        $user->update([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-        ]);
-
-        return redirect()->back()->with('success', 'User updated successfully');
+        
     }
 
     /**

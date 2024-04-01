@@ -844,10 +844,11 @@
         <aside class="bg-gray-800 text-white w-64 h-screen fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
     <!-- Sidebar content -->
     <div class="p-4">
-        <a href="/home" class="text-2xl font-bold mb-4 block">Task Manager</a>
+        <a href="/" class="text-2xl font-bold mb-4 block">Task Manager</a>
         <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
         <ul>
             <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('task.index') }}" class="text-gray-300 hover:text-white block">Tasks</a></li>
+            <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('users.index') }}" class="text-gray-300 hover:text-white block">Users</a></li>
             @if (auth()->user()->hasRole('administrator'))
                 <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white block">Role</a></li>
                 <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('permission.index') }}" class="text-gray-300 hover:text-white block">Permission</a></li>

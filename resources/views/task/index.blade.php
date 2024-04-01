@@ -1,7 +1,7 @@
 @extends('welcome')
 
 @section('content')
-<div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
+<div class="max-w-full mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
     <div class="flex justify-between">
         <div>
             <h2 class="text-2xl font-semibold mb-6">My Tasks</h2>
