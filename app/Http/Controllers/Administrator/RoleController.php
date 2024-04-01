@@ -15,7 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::whereNotIn('name', ['administrator'])->get();
+        $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
         return view('administrator.role.index',compact('roles','permissions'));
     }
@@ -25,7 +25,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        $roles = Role::whereNotIn('name', ['administrator'])->get();
+        $permissions = Permission::all();
+        return view('administrator.role.create',compact('roles','permissions'));
     }
 
     /**
@@ -34,13 +36,29 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'postName' => 'required',
+            'roleName' => 'required|unique:roles,name',
+            'permissions' => 'required|array',
         ]);
-        Role::create([
-            'name' => $validate['postName'], 
+    
+        // Create the role
+        $role = Role::create([
+            'name' => $request->roleName,
+            'guard_name' => 'web'
         ]);
+    
+        foreach ($request->permissions as $permissionId) {
+            $permission = Permission::find($permissionId);
+            if ($permission) {
+                $role->givePermissionTo($permission);
+            }
+        }
+    
+        // Redirect back with success message
         return redirect()->back()->with('success', 'Role created successfully');
     }
+    
+
+
 
     /**
      * Display the specified resource.
@@ -55,7 +73,11 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+
+        $permissions = Permission::all();
+
+        return view('administrator.role.update', compact('role', 'permissions'));
     }
 
     /**
@@ -64,12 +86,22 @@ class RoleController extends Controller
     public function update(Request $request,Role $role)
     {
         $validate = $request->validate([
-            'edit_role_name' => 'required',
+            'roleName' => 'required|unique:roles,name,' . $role->id,
+            'permissions' => 'required|array',
         ]);
+
         $role->update([
-            'name' => $validate['edit_role_name'], 
+            'name' => $request->roleName,
         ]);
-        return redirect()->back()->with('success', 'Role created successfully');
+    
+        foreach ($request->permissions as $permissionId) {
+            $permission = Permission::find($permissionId);
+            if ($permission) {
+                $role->givePermissionTo($permission);
+            }
+        }
+        
+        return redirect()->back()->with('success', 'Role updated successfully');
     }
 
     /**
@@ -77,24 +109,6 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $role->delete();
-        return redirect()->back()->with('success', 'Role deleted successfully');
-    }
-
-    public function givenPermission(Request $request, Role $role){
-        if($role->hasPermissionTo($request->permission)){
-            return redirect()->back()->with('message', 'Permission Exists');
-        }
-        $role->givePermissionTo($request->permission);
-        return redirect()->back()->with('message', 'Permission Added');
-    }
-
-    public function removePermission(Role $role, Permission $permission){
-        if($role->hasPermissionTo($permission)){
-            $role->revokePermissionTo($permission);
-            return back()->with('message', 'Permission Deleted');
-        }
-        return back()->with('message', 'Permission Denied');
-
+     
     }
 }

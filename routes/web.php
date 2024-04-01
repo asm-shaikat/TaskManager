@@ -39,13 +39,7 @@ Route::get('/administrator', function () {
 
 
 Route::middleware(['auth', 'role:administrator'])->prefix('administrator')->group(function(){
-    // Route::resource('/',HomeController::class);
     Route::resource('/role',RoleController::class);
-    Route::post('/role/{role}/permissions',[RoleController::class,'givenPermission'])->name('administrator.role.permissions');
-    Route::delete('/role/{role}/permissions/{permission}',[RoleController::class,'removePermission'])->name('administrator.role.removePermissions');
-    Route::post('/permission/{permission}/role',[PermissionController::class,'assignRole'])->name('administrator.permissions.role');
-    Route::delete('/permissions/{permissions}/role/{role}',[PermissionController::class,'removeRole'])->name('administrator.removePermissions.role');
-    Route::resource('/permission',PermissionController::class);
 });
 
 

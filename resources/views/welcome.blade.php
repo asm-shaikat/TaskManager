@@ -851,7 +851,6 @@
             <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('users.index') }}" class="text-gray-300 hover:text-white block">Users</a></li>
             @if (auth()->user()->hasRole('administrator'))
                 <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white block">Role</a></li>
-                <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('permission.index') }}" class="text-gray-300 hover:text-white block">Permission</a></li>
             @endif
             <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you really want to logout?')">
                 @csrf
