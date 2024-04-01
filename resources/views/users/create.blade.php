@@ -27,6 +27,15 @@
         <input type="email" name="email" id="email" class="mt-1 p-2 w-full border rounded-md" value="{{ old('email') }}" required>
     </div>
 
+    <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
+        @foreach($roles as $role)
+        <div class="mb-4">
+            <input type="checkbox" name="roles[]" value="{{ $role->id }}" id="role{{ $role->id }}" class="checkbox" />
+            <label for="role{{ $role->id }}" class="block text-sm font-medium text-gray-600 ml-2">{{ $role->name }}</label>
+        </div>
+        @endforeach
+    </div>
+
     <div class="mb-4">
         <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
         <input type="password" name="password" id="password" class="mt-1 p-2 w-full border rounded-md" value="{{ old('password') }}" required>
@@ -41,4 +50,5 @@
 </form>
 
 </div>
+
 @endsection

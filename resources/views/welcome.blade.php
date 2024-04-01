@@ -17,7 +17,9 @@
     <!-- Include DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 
-
+    <!--select2  -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <!-- Styles -->
 
     <style>
@@ -842,25 +844,27 @@
     <div x-data="{ open: true }">
         <!-- Sidebar -->
         <aside class="bg-gray-800 text-white w-64 h-screen fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
-    <!-- Sidebar content -->
-    <div class="p-4">
-        <a href="/" class="text-2xl font-bold mb-4 block">Task Manager</a>
-        <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
-        <ul>
-            <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('task.index') }}" class="text-gray-300 hover:text-white block">Tasks</a></li>
-            <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('users.index') }}" class="text-gray-300 hover:text-white block">Users</a></li>
-            @if (auth()->user()->hasRole('administrator'))
-                <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white block">Role</a></li>
-            @endif
-            <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you really want to logout?')">
-                @csrf
-                <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black">
-                    <button type="submit" class="text-gray-300 hover:text-white block focus:outline-none">Logout</button>
-                </li>
-            </form>
-        </ul>
-    </div>
-</aside>
+            <!-- Sidebar content -->
+            <div class="p-4">
+                <a href="/" class="text-2xl font-bold mb-4 block">Task Manager</a>
+                <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
+                <ul>
+                    <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('task.index') }}" class="text-gray-300 hover:text-white block">Tasks</a></li>
+                    @can('create user')
+                    <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('users.index') }}" class="text-gray-300 hover:text-white block">Users</a></li>
+                    @endcan
+                    @if (auth()->user()->hasRole('administrator'))
+                    <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black"><a href="{{ route('role.index') }}" class="text-gray-300 hover:text-white block">Role</a></li>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you really want to logout?')">
+                        @csrf
+                        <li class="mb-2 p-2 hover:bg-slate-500 hover:text-black">
+                            <button type="submit" class="text-gray-300 hover:text-white block focus:outline-none">Logout</button>
+                        </li>
+                    </form>
+                </ul>
+            </div>
+        </aside>
 
 
         <!-- Main content -->
@@ -880,14 +884,14 @@
     </div>
 
     @yield('script')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js">
-</script>
-<script>
-    $(document).ready( function () {
-    $('#dtExample').DataTable();
-} )
-</script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js">
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#dtExample').DataTable();
+        })
+    </script>
 </body>
 
 </html>

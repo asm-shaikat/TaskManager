@@ -93,7 +93,9 @@ class RoleController extends Controller
         $role->update([
             'name' => $request->roleName,
         ]);
-    
+
+        $role->syncPermissions(intval($request->permissions));
+
         foreach ($request->permissions as $permissionId) {
             $permission = Permission::find($permissionId);
             if ($permission) {

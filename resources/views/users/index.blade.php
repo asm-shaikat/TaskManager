@@ -2,20 +2,22 @@
 @section('title','User List')
 @section('content')
 <div class="max-w-full mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
-    @if (auth()->user()->hasRole('administrator'))
     <div class="flex justify-between">
         <div>
             <h2 class="text-2xl font-semibold mb-6">Users List</h2>
         </div>
+        @can('create user')
         <div>
             <a href="{{ route('users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">ADD User</a>
         </div>
+        @endcan
     </div>
     <table class="w-full border">
         <thead>
             <tr>
                 <th class="border p-2">Name</th>
                 <th class="border p-2">Email</th>
+                <th class="border p-2">Role</th>
                 <th class="border p-2">Actions</th>
             </tr>
         </thead>
@@ -24,8 +26,26 @@
             <tr>
                 <td class="border p-2">{{ $user->name }}</td>
                 <td class="border p-2">{{ $user->email }}</td>
+                <td class="border p-2">
+                    @foreach($user->roles as $role)
+                    <li>{{ $role->name }}</li>
+                    @endforeach
+                </td>
                 <td class="border p-2 text-center">
-                    <a href="{{ route('users.edit', $user->id) }}" class="text-blue-500 hover:underline">Edit</a>
+                    <div class="flex gap-2">
+                        <div class="p-2">
+                            <a href="{{ route('users.edit', $user->id) }}" class="text-blue-500 hover:underline">
+                                <img src="{{ asset('assets/images/svg/pencil-solid.svg') }}" class="w-4" alt="user-svg">
+                            </a>
+                        </div>
+                        <div class="p-2">
+                        <form action="{{ route('users.destroy', $user->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:underline ml-2">Delete</button>
+                        </form>
+                        </div>
+                    </div>
                 </td>
             </tr>
             @empty
@@ -35,43 +55,5 @@
             @endforelse
         </tbody>
     </table>
-    @else
-    <h2 class="text-2xl font-semibold mb-6">Task List</h2>
-    @php
-    $tasks = auth()->user()->tasks()->orderBy('priority')->orderBy('category')->orderBy('due_date')->get();
-    $highPriorityTasksCount = $tasks->where('priority', 'high')->count();
-    $dueTasksCount = $tasks->where('due_date', '<', now())->count();
-        @endphp
-        <p class="p-2">
-            You have {{$highPriorityTasksCount}} Hight Priority tasks
-        </p>
-        <p class="p-2">Due date task {{ $dueTasksCount }}</p>
-        @if ($tasks->count() > 0)
-        <table class="w-full border">
-            <thead>
-                <tr>
-                    <th class="border p-2">Title</th>
-                    <th class="border p-2">Priority</th>
-                    <th class="border p-2">Category</th>
-                    <th class="border p-2">Due Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($tasks as $task)
-                <tr>
-                    <td class="border p-2">{{ $task->title }}</td>
-                    <td class="border p-2">{{ $task->priority }}</td>
-                    <td class="border p-2">{{ $task->category }}</td>
-                    <td class="border p-2 {{ $task->due_date && \Carbon\Carbon::parse($task->due_date)->isPast() ? 'text-red-500' : '' }}">
-                        {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : 'Not set' }}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        @else
-        <p>No tasks found.</p>
-        @endif
-        @endif
 </div>
 @endsection

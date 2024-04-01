@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -31,7 +32,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('users.create');
+        $roles =  Role::all();
+        return view('users.create',compact('roles'));
     }
 
     /**
@@ -43,6 +45,7 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'roles' => ['required','array'],
         ]);
 
         $user = User::create([
@@ -50,6 +53,13 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        foreach ($request->roles as $roleId) {
+            $roles = Role::find($roleId);
+            if ($roles) {
+                $user->assignRole($roles);
+            }
+        }
         return redirect('/users');
     }
 
@@ -67,11 +77,11 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::find($id);
-
+        $roles = Role::latest()->get();
         if (!$user) {
             return abort(404);
         }    
-        return view('users.update', compact('user'));
+        return view('users.update', compact('user','roles'));
     }
 
     /**
@@ -88,12 +98,21 @@ class UserController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $user->id,
+        'roles' => ['required','array'],
+
     ]);
     
     $user->update([
         'name' => $request->input('name'),
         'email' => $request->input('email'),
     ]);
+
+    foreach ($request->roles as $roleId) {
+        $roles = Role::find($roleId);
+        if ($roles) {
+            $user->assignRole($roles);
+        }
+    }
     return redirect()->route('users.index')->with('success', 'User updated successfully');
 }
 
@@ -102,8 +121,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user) 
     {
-        //
+        $user->delete();
+        return redirect()->back()->with('success', 'User deleted successfully');
     }
 }

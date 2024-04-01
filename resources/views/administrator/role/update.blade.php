@@ -17,7 +17,7 @@
             <label for="roleName" class="block text-sm font-medium text-gray-600">Role Name</label>
             <input type="text" id="roleName" name="roleName" class="mt-1 p-2 border rounded-md w-full" value="{{ $role->name }}" required>
         </div>
-
+        <p>Assign Permission</p>
         <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
             @foreach($permissions as $permission)
                 <div class="mb-4">
@@ -29,7 +29,7 @@
 
         <div class="flex justify-between items-center">
             <!-- Submit button -->
-            <button type="submit" class=" bg-green-500 hover:bg-green-900 text-white font-bold py-2 px-4 rounded mr-2">Update</button>
+            <button type="submit" class="btn btn-success">Update</button>
         </div>
     </form>
 

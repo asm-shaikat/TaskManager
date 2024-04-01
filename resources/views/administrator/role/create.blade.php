@@ -13,7 +13,7 @@
         <label for="roleName" class="block text-sm font-medium text-gray-600">Role Name</label>
         <input type="text" id="roleName" name="roleName" class="mt-1 p-2 border rounded-md w-full" required>
     </div>
-
+    <p class="underline">Give Permission</p>
     <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
         @foreach($permissions as $permission)
         <div class="mb-4">
