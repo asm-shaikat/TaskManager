@@ -18,7 +18,7 @@ class RoleController extends Controller
         $roles = Role::whereNotIn('name', ['administrator'])->get();
         $rolePer = Role::with('permissions')->get();
         $permissions = Permission::all();
-        // return $rolePer;
+        return $rolePer;
         return view('administrator.role.index',compact('roles','permissions'));
     }
 
@@ -36,23 +36,29 @@ class RoleController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $validate = $request->validate([
-        'roleName' => 'required|unique:roles,name',
-    ]);
-
-    // Create the role
-    $role = Role::create([
-        'name' => $request->roleName,
-        'guard_name' => 'web'
-    ]);
-
-    // Sync permissions with the role
-    $role->syncPermissions($request->permissions);
-
-    // Redirect back with success message
-    return redirect()->back()->with('success', 'Role created successfully');
-}
+    {
+        $validate = $request->validate([
+            'roleName' => 'required|unique:roles,name',
+            'permissions' => 'required|array',
+        ]);
+    
+        // Create the role
+        $role = Role::create([
+            'name' => $request->roleName,
+            'guard_name' => 'web'
+        ]);
+    
+        foreach ($request->permissions as $permissionId) {
+            $permission = Permission::find($permissionId);
+            if ($permission) {
+                $role->givePermissionTo($permission);
+            }
+        }
+    
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Role created successfully');
+    }
+    
 
 
 
