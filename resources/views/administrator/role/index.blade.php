@@ -36,9 +36,11 @@
                             </a>
                         </div>
                         <div>
-                            <a href="" class="text-blue-500 hover:underline">
-                                <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
-                            </a>
+                        <form action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:underline ml-2">Delete</button>
+                        </form>
                         </div>
                     </div>
                 </td>
@@ -52,7 +54,7 @@
         </tbody>
     </table>
 
-  
+
 
 </div>
 

@@ -54,7 +54,7 @@ class RoleController extends Controller
         }
     
         // Redirect back with success message
-        return redirect()->back()->with('success', 'Role created successfully');
+        return redirect()->route('role.index');
     }
     
 
@@ -109,6 +109,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-     
+        $role->delete();
+        return redirect()->back()->with('success', 'Role deleted successfully');
     }
 }
