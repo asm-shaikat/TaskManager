@@ -15,10 +15,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::whereNotIn('name', ['administrator'])->get();
-        $rolePer = Role::with('permissions')->get();
+        $roles = Role::with('permissions')->get();
         $permissions = Permission::all();
-        return $rolePer;
         return view('administrator.role.index',compact('roles','permissions'));
     }
 
@@ -75,7 +73,11 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+
+        $permissions = Permission::all();
+
+        return view('administrator.role.update', compact('role', 'permissions'));
     }
 
     /**
@@ -83,7 +85,23 @@ class RoleController extends Controller
      */
     public function update(Request $request,Role $role)
     {
-       
+        $validate = $request->validate([
+            'roleName' => 'required|unique:roles,name,' . $role->id,
+            'permissions' => 'required|array',
+        ]);
+
+        $role->update([
+            'name' => $request->roleName,
+        ]);
+    
+        foreach ($request->permissions as $permissionId) {
+            $permission = Permission::find($permissionId);
+            if ($permission) {
+                $role->givePermissionTo($permission);
+            }
+        }
+        
+        return redirect()->back()->with('success', 'Role updated successfully');
     }
 
     /**
@@ -92,14 +110,5 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
      
-    }
-
-    public function givenPermission(Request $request, Role $role){
-       
-    }
-
-    public function removePermission(Role $role, Permission $permission){
-       
-
     }
 }
