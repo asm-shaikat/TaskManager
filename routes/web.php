@@ -29,6 +29,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('home',HomeController::class);
+    Route::get('/', [HomeController::class,'dashboard']);
 });
 
 Route::get('/administrator', function () {
@@ -37,7 +38,7 @@ Route::get('/administrator', function () {
 
 
 Route::middleware(['auth', 'role:administrator'])->prefix('administrator')->group(function(){
-    Route::resource('/',HomeController::class);
+    // Route::resource('/',HomeController::class);
     Route::resource('/role',RoleController::class);
     Route::post('/role/{role}/permissions',[RoleController::class,'givenPermission'])->name('administrator.role.permissions');
     Route::delete('/role/{role}/permissions/{permission}',[RoleController::class,'removePermission'])->name('administrator.role.removePermissions');

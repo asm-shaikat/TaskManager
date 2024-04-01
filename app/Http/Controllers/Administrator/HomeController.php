@@ -3,15 +3,29 @@
 namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\FuncCall;
 
 class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    public function dashboard()
+    { 
+        if (auth()->user()->hasRole('administrator')) {
+            $query = Task::query();
+        } else {
+            $query = Task::where('user_id', auth()->id());
+        }  
+        $users = User::all();
+        $tasks = $query->get();
+        return view('dashboard',compact('users','tasks'));
+    }
+
     public function index()
     {
 
