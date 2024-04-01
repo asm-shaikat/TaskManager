@@ -4,7 +4,9 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Role Management</h2>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="my_modal_2.showModal()">Create Role</button>
+        <a href="{{ route('role.create') }}">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Role</button>
+        </a>
     </div>
 
     <div class="overflow-x-auto">
@@ -44,6 +46,14 @@
                     <label for="postName" class="block text-sm font-medium text-gray-600">Role Name</label>
                     <input type="text" id="postName" name="postName" class="mt-1 p-2 border rounded-md w-full" required>
                 </div>
+                    @foreach($permissions as $permission)
+                    <div class="mb-4">
+                        <input type="checkbox" checked="checked" id="permission{{ $permission->id }}" class="checkbox" />
+                        <label for="permission{{ $permission->id }}" class="block text-sm font-medium text-gray-600 ml-2">{{ $permission->name }}</label>
+                    </div>
+                    @endforeach
+
+
 
                 <div class="flex justify-between items-center">
                     <!-- Close button -->
@@ -85,7 +95,7 @@
                 <p>Role Permission</p>
                 @if($role->permissions)
                 <div class="flex gap-1">
-                @foreach($role->permissions as $role_permission)
+                    @foreach($role->permissions as $role_permission)
                     <form action="{{ route('administrator.role.removePermissions', [$role->id, $role_permission->id]) }}" onsubmit="return confirm('Are you sure?')" method="post">
                         @method('DELETE')
                         @csrf
