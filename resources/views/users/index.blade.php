@@ -12,7 +12,7 @@
         </div>
         @endcan
     </div>
-    <table class="w-full border">
+    <table class="w-full border" id="yajraTable">
         <thead>
             <tr>
                 <th class="border p-2">Name</th>
@@ -22,38 +22,34 @@
             </tr>
         </thead>
         <tbody>
-            @forelse($users as $user)
-            <tr>
-                <td class="border p-2">{{ $user->name }}</td>
-                <td class="border p-2">{{ $user->email }}</td>
-                <td class="border p-2">
-                    @foreach($user->roles as $role)
-                    <li>{{ $role->name }}</li>
-                    @endforeach
-                </td>
-                <td class="border p-2 text-center">
-                    <div class="flex gap-2">
-                        <div class="p-2">
-                            <a href="{{ route('users.edit', $user->id) }}" class="text-blue-500 hover:underline">
-                                <img src="{{ asset('assets/images/svg/pencil-solid.svg') }}" class="w-4" alt="user-svg">
-                            </a>
-                        </div>
-                        <div class="p-2">
-                        <form action="{{ route('users.destroy', $user->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:underline ml-2">Delete</button>
-                        </form>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td class="border p-2" colspan="3">No users found.</td>
-            </tr>
-            @endforelse
+           
         </tbody>
     </table>
 </div>
+@endsection
+@section('script')
+<script>
+    $('#yajraTable').DataTable( {
+    serverSide: true,
+    ajax: {
+        url: '/users',
+        type: 'GET'
+    },
+    columns:[
+        {
+            data: 'name',
+            name: 'name',
+        },
+        {
+            data: 'email',
+            name: 'email',
+        },
+        {
+            data: 'role',
+            name: 'role',
+        },
+        { data: 'actions', name: 'actions', orderable: false, searchable: false },
+    ]
+} );
+</script>
 @endsection

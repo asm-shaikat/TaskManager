@@ -11,6 +11,7 @@ use Illuminate\Validation\Rules;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -18,14 +19,37 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $users = User::whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'administrator');
-        })->get();
-        $authid = auth()->user()->id;
-        $taskInfo =  DB::table('tasks')->where('user_id', $authid)->get();
-        return view('users.index', compact('users', 'taskInfo'));
+{
+    $authid = auth()->user()->id;
+    $taskInfo = DB::table('tasks')->where('user_id', $authid)->get();
+
+    // If the request expects JSON response (for DataTables)
+    if(request()->ajax()) {
+        return DataTables::eloquent(User::query())
+            ->addColumn('role', function ($user) {
+                // Get the roles associated with the user
+                $roles = $user->roles->pluck('name')->implode(', ');
+                return $roles;
+            })
+            ->addColumn('actions', function ($user) {
+                return '<a href="'.route('users.edit', $user->id).'" class="btn btn-sm">
+                <img src="'.asset('assets/images/svg/pencil-solid.svg').'" class="w-4" alt="user-svg">
+                </a>
+                        <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">
+                            '.csrf_field().'
+                            '.method_field('DELETE').'
+                            <button type="submit" class="btn btn-danger">
+                                <img src="'.asset('assets/images/svg/trash-solid.svg').'" class="w-4" alt="user-svg">
+                            </button>
+                        </form>';
+            })
+            ->rawColumns(['actions']) 
+            ->toJson();
     }
+
+    return view('users.index', compact('taskInfo'));
+}
+
 
     /**
      * Show the form for creating a new resource.
