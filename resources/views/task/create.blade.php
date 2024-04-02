@@ -49,7 +49,7 @@
 
         <div class="mb-4">
             <label for="priority" class="block text-sm font-medium text-gray-600">Priority</label>
-            <select name="priority" id="priority" class="mt-1 p-2 w-full border rounded-md" required>
+            <select name="priority" id="priority" class="mt-1 p-2 w-full border rounded-md js-example-basic-single" name="state" required>
                 <option value="low">Low</option>
                 <option value="medium" selected>Medium</option>
                 <option value="high">High</option>
@@ -74,8 +74,6 @@
             </div>
         </div>
 
-
-
         <div class="mb-4">
             <label for="attachment" class="block text-sm font-medium text-gray-600">Attachment</label>
             <input type="file" name="attachment" id="attachment" class="mt-1 p-2 w-full border rounded-md">
@@ -86,9 +84,11 @@
 </div>
 @endsection
 @section('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
-    // Datepickr
-    var datepickerIcon = document.getElementById('datepicker-icon');
+   // Datepickr
+   var datepickerIcon = document.getElementById('datepicker-icon');
     datepickerIcon.addEventListener('click', function() {
         var datepickerInput = document.getElementById('datepicker');
         datepickerInput.focus();
@@ -97,5 +97,12 @@
         dateFormat: "Y-m-d",
     });
     // End Datepickr
+
+    // Select2
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+        $('#category').select2();
+    });
+    // End of Select2
 </script>
 @endsection
