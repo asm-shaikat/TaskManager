@@ -12,7 +12,7 @@
         </div>
         @endcan
     </div>
-    <table class="w-full border" id="yajraTable">
+    <table class="w-full border" id="yajraUserTable">
         <thead>
             <tr>
                 <th class="border p-2">Name</th>
@@ -29,7 +29,7 @@
 @endsection
 @section('script')
 <script>
-    $('#yajraTable').DataTable( {
+    $('#yajraUserTable').DataTable( {
     serverSide: true,
     ajax: {
         url: '/users',

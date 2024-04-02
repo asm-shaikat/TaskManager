@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
+use Yajra\DataTables\Facades\DataTables;
 
 class TaskController extends Controller
 {
@@ -22,29 +23,34 @@ class TaskController extends Controller
     {
         // Check if the authenticated user has the administrator role
         if (auth()->user()->hasRole('administrator')) {
-            // Retrieve all tasks for administrators
             $query = Task::query();
         } else {
             // Retrieve tasks based on the currently authenticated user's ID
             $query = Task::where('user_id', auth()->id());
         }
-    
-        // Check if the title is provided in the request
-        if ($request->has('title')) {
-            $query->where('title', 'like', '%' . $request->input('title') . '%');
+
+        // Use DataTables to handle the request
+        if ($request->ajax()) {
+            return DataTables::of($query)
+                ->addColumn('actions', function ($task) {
+                    return '<a href="' . route('task.edit', $task->id) . '" class="btn btn-sm btn-primary">
+                        <img src="'.asset('assets/images/svg/pencil-solid.svg').'" class="w-4" alt="user-svg">
+                        </a>
+                        <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <img src="'.asset('assets/images/svg/trash-solid.svg').'" class="w-4" alt="user-svg">
+                            </button>
+                        </form>';
+                })
+                ->rawColumns(['actions'])
+                ->toJson();
         }
-    
-        // Get the tasks
         $tasks = $query->get();
         $tasksCount = $tasks->count();
-    
-        if ($request->ajax()) {
-            return response()->json(view('task.results', compact('tasks', 'tasksCount'))->render());
-        } else {
-            return view('task.index', compact('tasks', 'tasksCount'));
-        }
+        return view('task.index', compact('tasksCount', 'tasks'));
     }
-    
 
     
 

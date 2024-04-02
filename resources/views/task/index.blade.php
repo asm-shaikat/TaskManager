@@ -19,7 +19,7 @@
 
     <div class="mb-4">
         @if($tasksCount > 0)
-        <table class="w-full p-4 border display" id="dtExample">
+        <table class="w-full p-4 border display" id="yajraTaskTable">
             <thead>
                 <tr>
                     <th class="p-2">Title</th>
@@ -30,28 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($tasks as $task)
-                <tr>
-                    <td class="border p-2">
-                        <a href="{{ route('task.show', $task) }}" class="text-blue-500 hover:underline">{{ $task->title }}</a>
-                    </td>
-                    <td class="border p-2">{{ $task->description }}</td>
-                    <td class="border p-2">{{ $task->priority }}</td>
-                    <td class="border p-2">{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : 'Not set' }}</td>
-                    <td class="border p-2">
-                        @can('update task')
-                        <a href="{{ route('task.edit', $task->id) }}" class="text-green-500 hover:underline">Edit</a>
-                        @endcan
-                        @can('delete task')
-                        <form action="{{ route('task.destroy', $task) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:underline ml-2">Delete</button>
-                        </form>
-                        @endcan
-                    </td>
-                </tr>
-                @endforeach
+                
             </tbody>
         </table>
         @else
@@ -59,5 +38,37 @@
         @endif
     </div>
 </div>
+@endsection
+@section('script')
+<script>
+$(document).ready(function() {
+    $('#yajraTaskTable').DataTable({
+        serverSide: true,
+        ajax: {
+            url: '/task',
+            type: 'GET'
+        },
+        columns: [
+            { data: 'title', name: 'title',
+                render: function(data, type, row) {
+                    if (type === 'display') {
+                        var url = '/task/' + row.id;
+                        return '<a href="' + url + '" class="block p-2 text-blue-500 hover:underline">' + data + '</a>';
+                    }
+                    return data;
+                }
+            },
+            { data: 'description', name: 'description' },
+            { data: 'priority', name: 'priority' },
+            { data: 'due_date', name: 'due_date' },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false }
+        ]
+    });
 
+    $('#yajraTaskTable tbody').on('click', 'td:first-child', function() {
+        var data = $('#yajraTaskTable').DataTable().row($(this).closest('tr')).data();
+        window.location.href = data.show_url;
+    });
+});    
+</script>
 @endsection
