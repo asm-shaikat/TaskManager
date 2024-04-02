@@ -23,23 +23,23 @@
         </div>
 
         @if (auth()->user()->hasRole('administrator'))
-            @php
-            $nonAdminUsers = $users->reject(function ($user) {
-                return $user->hasRole('administrator');
-            });
-            @endphp
+        @php
+        $nonAdminUsers = $users->reject(function ($user) {
+        return $user->hasRole('administrator');
+        });
+        @endphp
 
-            <div class="mb-4">
-                <label for="user_id" class="block text-sm font-medium text-gray-600">Assign User</label>
-                <select name="user_id" id="user_id" class="mt-1 p-2 w-full border rounded-md" required>
-                    <option value="{{ auth()->user()->id }}" selected>Assign to myself ({{ auth()->user()->name }})</option>
-                    @foreach ($nonAdminUsers as $user)
-                        <option value="{{ $user->id }}">{{ $user->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="mb-4">
+            <label for="user_id" class="block text-sm font-medium text-gray-600">Assign User</label>
+            <select name="user_id" id="user_id" class="mt-1 p-2 w-full border rounded-md" required>
+                <option value="{{ auth()->user()->id }}" selected>Assign to myself ({{ auth()->user()->name }})</option>
+                @foreach ($nonAdminUsers as $user)
+                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
+            </select>
+        </div>
         @else
-            <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
+        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
         @endif
 
         <div class="mb-4">
@@ -64,10 +64,17 @@
             </select>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 relative">
             <label for="due_date" class="block text-sm font-medium text-gray-600">Due Date</label>
-            <input type="date" name="due_date" id="due_date" class="mt-1 p-2 w-full border rounded-md" value="{{ old('due_date') }}">
+            <div class="flex items-center border rounded-md">
+                <input type="text" name="due_date" id="datepicker" class="mt-1 p-2 w-full rounded-md focus:outline-none" placeholder="Select Due Date" value="{{ old('due_date') }}">
+                <span id="datepicker-icon" class="absolute right-0 mr-2 cursor-pointer">
+                    <i class="fas fa-calendar text-green-500"></i>
+                </span>
+            </div>
         </div>
+
+
 
         <div class="mb-4">
             <label for="attachment" class="block text-sm font-medium text-gray-600">Attachment</label>
@@ -77,4 +84,18 @@
         <button class="btn btn-success w-full text-white">ADD</button>
     </form>
 </div>
+@endsection
+@section('script')
+<script>
+    // Datepickr
+    var datepickerIcon = document.getElementById('datepicker-icon');
+    datepickerIcon.addEventListener('click', function() {
+        var datepickerInput = document.getElementById('datepicker');
+        datepickerInput.focus();
+    });
+    flatpickr("#datepicker", {
+        dateFormat: "Y-m-d",
+    });
+    // End Datepickr
+</script>
 @endsection

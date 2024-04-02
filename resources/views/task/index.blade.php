@@ -26,7 +26,7 @@
                     <th class="p-2">Description</th>
                     <th class="p-2">Priority</th>
                     <th class="p-2">Due Date</th>
-                    <th class="p-2">Actions</th> <!-- New column for actions -->
+                    <th class="p-2">Actions</th>
                 </tr>
             </thead>
             <tbody>
