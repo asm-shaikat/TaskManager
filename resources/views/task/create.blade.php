@@ -22,25 +22,17 @@
             <input type="text" name="title" id="title" class="mt-1 p-2 w-full border rounded-md" value="{{ old('title') }}" required>
         </div>
 
-        @if (auth()->user()->hasRole('administrator'))
-        @php
-        $nonAdminUsers = $users->reject(function ($user) {
-        return $user->hasRole('administrator');
-        });
-        @endphp
+        
 
         <div class="mb-4">
             <label for="user_id" class="block text-sm font-medium text-gray-600">Assign User</label>
             <select name="user_id" id="user_id" class="mt-1 p-2 w-full border rounded-md" required>
                 <option value="{{ auth()->user()->id }}" selected>Assign to myself ({{ auth()->user()->name }})</option>
-                @foreach ($nonAdminUsers as $user)
+                @foreach ($users as $user)
                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach
             </select>
         </div>
-        @else
-        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-        @endif
 
         <div class="mb-4">
             <label for="description" class="block text-sm font-medium text-gray-600">Description</label>
