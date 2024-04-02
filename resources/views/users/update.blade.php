@@ -31,7 +31,7 @@
         <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
             @foreach($roles as $role)
             <div class="mb-4">
-                <input type="checkbox" name="roles[]" value="{{ $role->id }}" id="role{{ $role->id }}" class="checkbox" @if ($user->hasRole($role->name))  checked @endif />
+                <input type="radio" name="role" value="{{ $role->id }}" id="role{{ $role->id }}" class="radio" @if ($user->hasRole($role->name)) checked @endif />
                 <label for="role{{ $role->id }}" class="block text-sm font-medium text-gray-600 ml-2">{{ $role->name }}</label>
             </div>
             @endforeach

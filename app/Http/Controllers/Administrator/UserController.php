@@ -69,22 +69,20 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'roles' => ['required','array'],
+            'role' => ['required'],
         ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        foreach ($request->roles as $roleId) {
-            $roles = Role::find($roleId);
-            if ($roles) {
-                $user->assignRole($roles);
-            }
+    
+        if ($request->filled('role')) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+            $user->assignRole(intval($request->role));
+            return redirect('/users');
+        } else {
+            return back()->withErrors(['role' => 'Please select a role.'])->withInput();
         }
-        return redirect('/users');
     }
 
     /**
@@ -122,21 +120,15 @@ class UserController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $user->id,
-        'roles' => ['required','array'],
-
+        'role' => ['required'],
     ]);
-    
+
     $user->update([
         'name' => $request->input('name'),
         'email' => $request->input('email'),
     ]);
 
-    foreach ($request->roles as $roleId) {
-        $roles = Role::find($roleId);
-        if ($roles) {
-            $user->assignRole($roles);
-        }
-    }
+    $user->syncRoles(intval($request->role));
     return redirect()->route('users.index')->with('success', 'User updated successfully');
 }
 
