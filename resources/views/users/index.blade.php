@@ -8,7 +8,9 @@
         </div>
         @can('create user')
         <div>
-            <a href="{{ route('users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">ADD User</a>
+            <a href="{{ route('users.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <svg></svg>
+            </a>
         </div>
         @endcan
     </div>

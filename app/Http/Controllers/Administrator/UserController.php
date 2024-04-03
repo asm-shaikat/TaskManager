@@ -32,14 +32,14 @@ class UserController extends Controller
                 return $roles;
             })
             ->addColumn('actions', function ($user) {
-                return '<a href="'.route('users.edit', $user->id).'" class="btn btn-sm">
-                <img src="'.asset('assets/images/svg/pencil-solid.svg').'" class="w-4" alt="user-svg">
-                </a>
+                return '<a href="' . route('users.edit', $user->id) . '" class="btn" style="background-color: green">
+                            <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                        </a>
                         <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">
                             '.csrf_field().'
                             '.method_field('DELETE').'
-                            <button type="submit" class="btn btn-danger">
-                                <img src="'.asset('assets/images/svg/trash-solid.svg').'" class="w-4" alt="user-svg">
+                            <button type="submit" class="btn" style="background-color: red">
+                                <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
                             </button>
                         </form>';
             })
