@@ -42,12 +42,13 @@
                             <form action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
                                 @csrf
                                 @method('DELETE')
-                                <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
+                                <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                    <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
+                                </button>
                             </form>
                         </div>
                     </div>
                 </td>
-
             </tr>
             @empty
             <tr>
@@ -56,24 +57,5 @@
             @endforelse
         </tbody>
     </table>
-
-
-
 </div>
-
-@section('script')
-<script>
-    function editRole(id, name) {
-        document.getElementById('role_id').value = id;
-        document.getElementById('edit_role_name').value = name;
-        var form = document.getElementById('editForm');
-        form.action = form.action.replace('__role_id__', id);
-        document.getElementById('edit_modal').showModal();
-    }
-
-    function updateRole() {
-        document.getElementById('editForm').submit();
-    }
-</script>
-@endsection
 @endsection

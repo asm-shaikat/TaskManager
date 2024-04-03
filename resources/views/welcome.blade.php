@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/pagination.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/search.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/length.css') }}">
-
+    @yield('style')
     <style>
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */
         *,

@@ -18,13 +18,12 @@
             <input type="text" id="roleName" name="roleName" class="mt-1 p-2 border rounded-md w-full" value="{{ $role->name }}" required>
         </div>
         <p>Assign Permission</p>
-        <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
-            @foreach($permissions as $permission)
-                <div class="mb-4">
-                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="permission{{ $permission->id }}" class="checkbox" @if ($role->hasPermissionTo($permission)) checked @endif />
-                    <label for="permission{{ $permission->id }}" class="block text-sm font-medium text-gray-600 ml-2">{{ $permission->name }}</label>
-                </div>
-            @endforeach
+        <div class="grid grid-cols-1 gap-4 mt-10 mb-10"> <!-- Modified grid-cols-1 here -->
+            <select name="permissions[]" id="permissions" multiple="multiple" class="js-example-basic-multiple w-full">
+                @foreach($permissions as $permission)
+                    <option value="{{ $permission->id }}" @if($role->hasPermissionTo($permission)) selected @endif>{{ $permission->name }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="flex justify-between items-center">
@@ -35,5 +34,30 @@
 
 </div>
 
+@endsection
 
+@section('style')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<style>
+    .grid-cols-1 {
+        grid-template-columns: 1fr;
+    }
+
+    .w-full {
+        width: 100%;
+    }
+
+
+</style>
+@endsection
+
+@section('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    // Initialize Select2
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2();
+    });
+</script>
 @endsection

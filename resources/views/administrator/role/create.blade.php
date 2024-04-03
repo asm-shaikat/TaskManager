@@ -12,14 +12,13 @@
         <label for="roleName" class="block text-sm font-medium text-gray-600">Role Name <span class="text-red-600">*</span></label>
         <input type="text" id="roleName" name="roleName" class="mt-1 p-2 border rounded-md w-full" required>
     </div>
-    <p class="underline">Give Permission</p>
-    <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
-        @foreach($permissions as $permission)
-        <div class="mb-4">
-            <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="permission{{ $permission->id }}" class="checkbox" />
-            <label for="permission{{ $permission->id }}" class="block text-sm font-medium text-gray-600 ml-2">{{ $permission->name }}</label>
-        </div>
-        @endforeach
+    <p>Give permission to the Role</p>
+    <div class="grid grid-cols-1 gap-4 mt-10 mb-10">
+        <select name="permissions[]" id="permissions" multiple="multiple" class="js-example-basic-multiple w-full">
+            @foreach($permissions as $permission)
+            <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+            @endforeach
+        </select>
     </div>
 
     <div class="flex justify-between items-center">
@@ -31,4 +30,36 @@
 
 </div>
 
+@endsection
+
+@section('style')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container .select2-selection--multiple {
+        width: 100% !important;
+    }
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #a0aec0;
+        border-radius: 0.375rem;
+        padding: 0.5rem;
+        height: auto !important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #edf2f7;
+        color: #2d3748;
+        border: none;
+    }
+</style>
+@endsection
+
+@section('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    // Select2
+    $(document).ready(function() {
+        $('.js-example-basic-multiple').select2();
+    });
+    // End of Select2
+</script>
 @endsection
