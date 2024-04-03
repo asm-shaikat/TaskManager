@@ -30,16 +30,16 @@
                 </td>
                 <td class="border p-2 text-center">
                     <div class="flex gap-2">
-                        <div>
+                        <div class="p-2">
                             <a href="{{ route('role.edit', $role->id) }}" class="text-blue-500 hover:underline">
                                 <img src="{{ asset('assets/images/svg/pencil-solid.svg') }}" class="w-4" alt="user-svg">
                             </a>
                         </div>
-                        <div>
+                        <div class="p-2">
                         <form action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:underline ml-2">Delete</button>
+                            <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
                         </form>
                         </div>
                     </div>
