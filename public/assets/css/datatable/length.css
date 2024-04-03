@@ -1,0 +1,22 @@
+/* Customize DataTable length menu */
+.dataTables_wrapper .dataTables_length {
+    margin-bottom: 10px; 
+    display: flex;
+    align-items: center;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    padding: 0.5rem; 
+    border: 1px solid #ddd; 
+    border-radius: 0.25rem; 
+    background-color: #ffffff; 
+    color: #4a5568; 
+    font-size: 0.875rem; 
+    margin-right: 10px; 
+    width: 100px;
+}
+
+.dataTables_wrapper .dataTables_length label {
+    color: #4a5568; 
+    font-size: 0.875rem;
+}
