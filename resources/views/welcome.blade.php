@@ -19,13 +19,13 @@
     <!-- Include DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
     <!-- Styles -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/pagination.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/search.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/length.css') }}">
-   
-   <style>
+
+    <style>
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */
         *,
         ::after,
@@ -847,33 +847,33 @@
     <div x-data="{ open: true }">
         <!-- Sidebar -->
         <aside class="w-64 h-screen fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
-    <!-- Sidebar content -->
-    <div class="p-4">
-        <a href="/" class="text-2xl font-bold mb-4 block">Task Manager</a>
-        <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
-        <ul>
-            <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('task*')) bg-blue-500 text-white @else hover:bg-blue-800 hover:text-white @endif">
-                <a href="{{ route('task.index') }}" class="block">Tasks</a>
-            </li>
-            @can('create user')
-            <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('users*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
-                <a href="{{ route('users.index') }}" class="block">Users</a>
-            </li>
-            @endcan
-            @if (auth()->user()->hasRole('administrator'))
-            <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('role*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
-                <a href="{{ route('role.index') }}" class="block">Role</a>
-            </li>
-            @endif
-            <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you really want to logout?')">
-                @csrf
-                <li class="mb-2 p-2 border-b shadow-sm hover:bg-blue-600 hover:text-white">
-                    <button type="submit" class="block focus:outline-none">Logout</button>
-                </li>
-            </form>
-        </ul>
-    </div>
-</aside>
+            <!-- Sidebar content -->
+            <div class="p-4">
+                <a href="/" class="text-2xl font-bold mb-4 block font-serif">Task Manager</a>
+                <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
+                <ul>
+                    <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('task*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
+                        <a href="{{ route('task.index') }}" class="block">Tasks</a>
+                    </li>
+                    @can('create user')
+                    <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('users*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
+                        <a href="{{ route('users.index') }}" class="block">Users</a>
+                    </li>
+                    @endcan
+                    @if (auth()->user()->hasRole('administrator'))
+                    <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('administrator/role*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
+                        <a href="{{ route('role.index') }}" class="block">Role</a>
+                    </li>
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you really want to logout?')">
+                        @csrf
+                        <li class="mb-2 p-2 border-b shadow-sm hover:bg-blue-600 hover:text-white">
+                            <button type="submit" class="block focus:outline-none">Logout</button>
+                        </li>
+                    </form>
+                </ul>
+            </div>
+        </aside>
 
 
 
@@ -892,7 +892,7 @@
             @yield('content')
         </div>
     </div>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
@@ -900,7 +900,7 @@
         $(document).ready(function() {
             $('#dtExample').DataTable();
         })
-        </script>
+    </script>
     @yield('script')
 </body>
 
