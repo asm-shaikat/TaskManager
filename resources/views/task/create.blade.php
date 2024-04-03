@@ -18,11 +18,11 @@
         @csrf
 
         <div class="mb-4">
-            <label for="title" class="block text-sm font-medium text-gray-600">Title</label>
+            <label for="title" class="block text-sm font-medium text-gray-600">Title <span class="text-red-600">*</span></label>
             <input type="text" name="title" id="title" class="mt-1 p-2 w-full border rounded-md" value="{{ old('title') }}" required>
         </div>
 
-        
+
 
         <div class="mb-4">
             <label for="user_id" class="block text-sm font-medium text-gray-600">Assign User</label>
@@ -66,6 +66,10 @@
             </div>
         </div>
 
+        <!-- Attachment placeholder -->
+        <div class="mb-4">
+            <img id="attachment-preview" src="{{ asset('assets/images/default-image.webp') }}" class="h-60 w-full" alt="">
+        </div>
         <div class="mb-4">
             <label for="attachment" class="block text-sm font-medium text-gray-600">Attachment</label>
             <input type="file" name="attachment" id="attachment" class="mt-1 p-2 w-full border rounded-md">
@@ -79,8 +83,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
-   // Datepickr
-   var datepickerIcon = document.getElementById('datepicker-icon');
+    // Datepickr
+    var datepickerIcon = document.getElementById('datepicker-icon');
     datepickerIcon.addEventListener('click', function() {
         var datepickerInput = document.getElementById('datepicker');
         datepickerInput.focus();
@@ -96,5 +100,17 @@
         $('#category').select2();
     });
     // End of Select2
+
+    // file preview
+    $(document).ready(function() {
+        $('#attachment').change(function(e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#attachment-preview').attr('src', e.target.result).removeClass('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+    });
 </script>
 @endsection

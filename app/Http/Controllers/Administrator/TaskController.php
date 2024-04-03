@@ -73,7 +73,7 @@ class TaskController extends Controller
             'priority' => 'required|in:low,medium,high',
             'category' => 'required|in:work,personal',
             'due_date' => 'nullable|date',
-            'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:2048', 
+            'attachment' => 'nullable|file|mimes:jpeg,png,gif,pdf,doc,docx|max:2048',
         ]);
         $task = Task::create($validatedData);
 
@@ -83,7 +83,7 @@ class TaskController extends Controller
             $task->save();
         }
 
-        return redirect()->route('task.create')->with('success', 'Task added successfully!');
+        return redirect()->route('task.index')->with('success', 'Task added successfully!');
     }
 
     /**

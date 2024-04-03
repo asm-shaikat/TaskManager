@@ -40,11 +40,12 @@ class CommentController extends Controller
         $comment = new Comment([
             'content' => $request->input('content'),
             'task_id' => $request->input('task_id'),
+            'user_id' => auth()->id(),
         ]);
 
         if ($request->hasFile('attachment')) {
             $request->validate([
-                'attachment' => 'required|mimes:pdf|max:2048',
+                'attachment' => 'nullable|file|mimes:jpeg,png,gif,pdf,doc,docx|max:2048',
             ]);
 
             $file = $request->file('attachment');
