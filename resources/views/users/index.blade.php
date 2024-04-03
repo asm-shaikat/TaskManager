@@ -10,6 +10,7 @@
         <div>
             <a href="{{ route('users.create') }}">
                 <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
+                    <p class="p-4">Create</p>
                     <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-6" alt="">
                 </button>
             </a>

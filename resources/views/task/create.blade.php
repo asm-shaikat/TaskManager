@@ -1,5 +1,5 @@
 @extends('welcome')
-
+@section('title','Create Task')
 @section('content')
 <div class="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
     <h2 class="text-2xl font-semibold mb-6">Add Task</h2>

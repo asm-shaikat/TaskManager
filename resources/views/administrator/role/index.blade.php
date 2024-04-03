@@ -5,7 +5,10 @@
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Role Management</h2>
         <a href="{{ route('role.create') }}">
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create Role</button>
+            <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
+                <p class="p-4">Create</p>
+                <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-6" alt="">
+            </button>
         </a>
     </div>
 
@@ -36,11 +39,11 @@
                             </a>
                         </div>
                         <div class="p-2">
-                        <form action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
-                            @csrf
-                            @method('DELETE')
-                            <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
-                        </form>
+                            <form action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
+                                @csrf
+                                @method('DELETE')
+                                <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
+                            </form>
                         </div>
                     </div>
                 </td>

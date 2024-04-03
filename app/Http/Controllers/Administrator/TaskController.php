@@ -21,26 +21,24 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-        // Check if the authenticated user has the administrator role
         if (auth()->user()->hasRole('administrator')) {
-            $query = Task::query();
+            $query = Task::with('user'); 
         } else {
-            // Retrieve tasks based on the currently authenticated user's ID
-            $query = Task::where('user_id', auth()->id());
-        }
+            $query = Task::where('user_id', auth()->id())->with('user'); // Eager loading the user relationship
+    }
 
         // Use DataTables to handle the request
         if ($request->ajax()) {
             return DataTables::of($query)
                 ->addColumn('actions', function ($task) {
-                    return '<a href="' . route('task.edit', $task->id) . '" class="btn btn-sm btn-primary">
-                        <img src="'.asset('assets/images/svg/pencil-solid.svg').'" class="w-4" alt="user-svg">
+                    return '<a href="' . route('task.edit', $task->id) . '" class="btn" style="background-color: green">
+                        <img src="'.asset('assets/images/svg/pencil-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
                         </a>
                         <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
-                            <button type="submit" class="btn btn-sm btn-danger">
-                                <img src="'.asset('assets/images/svg/trash-solid.svg').'" class="w-4" alt="user-svg">
+                            <button type="submit" class="btn btn-sm" style="background-color: red">
+                                <img src="'.asset('assets/images/svg/trash-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
                             </button>
                         </form>';
                 })

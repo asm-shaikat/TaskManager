@@ -1,16 +1,15 @@
 @extends('welcome')
-
+@section('title','Create Role')
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-5">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Role Management</h2>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="my_modal_2.showModal()">Create Role</button>
     </div>
 
     <form action="{{ route('role.store') }}" method="post" class="py-4" enctype="multipart/form-data">
     @csrf
     <div class="mb-4">
-        <label for="roleName" class="block text-sm font-medium text-gray-600">Role Name</label>
+        <label for="roleName" class="block text-sm font-medium text-gray-600">Role Name <span class="text-red-600">*</span></label>
         <input type="text" id="roleName" name="roleName" class="mt-1 p-2 border rounded-md w-full" required>
     </div>
     <p class="underline">Give Permission</p>
