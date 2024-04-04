@@ -80,6 +80,16 @@
             </div>
         </div>
 
+        @if($task->attachment)
+        <div class="mb-4">
+            <img id="attachment-preview" src="{{ asset('storage/uploads/'.$task->attachment) }}" class="h-60 w-full" alt="">
+        </div>
+        @else
+        <div class="mb-4">
+            <img id="attachment-preview" src="{{ asset('assets/images/default-image.webp') }}" class="h-60 w-full" alt="">
+        </div>
+        @endif
+
         <div class="mb-4">
             <label for="attachment" class="block text-sm font-medium text-gray-600">Attachment</label>
             <input type="file" name="attachment" id="attachment" class="mt-1 p-2 w-full border rounded-md">
@@ -93,6 +103,24 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
+    // file preview
+    $(document).ready(function() {
+        $('#attachment').change(function(e) {
+            var file = e.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#attachment-preview').attr('src', e.target.result).removeClass('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function scrollToBottom() {
+            var container = document.getElementById('comments-container');
+            container.scrollTop = container.scrollHeight;
+        }
+        scrollToBottom();
+    });
+    // End file preview
     // Datepickr
     var datepickerIcon = document.getElementById('datepicker-icon');
     datepickerIcon.addEventListener('click', function() {
