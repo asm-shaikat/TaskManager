@@ -23,10 +23,6 @@
         <div class="mb-4">
             <img id="attachment-preview" src="{{ asset('storage/uploads/'.$task->attachment) }}" class="h-60 w-full" alt="">
         </div>
-        @else
-        <div class="mb-4">
-            <img id="attachment-preview" src="{{ asset('assets/images/default-image.webp') }}" class="h-60 w-full" alt="">
-        </div>
         @endif
         <form action="{{ route('comments.store') }}" method="post" enctype="multipart/form-data">
             @csrf
