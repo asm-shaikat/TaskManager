@@ -28,16 +28,29 @@
             <input type="email" name="email" id="email" class="mt-1 p-2 w-full border rounded-md" value="{{ old('email', $user->email) }}" required>
         </div>
 
-        <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
-            @foreach($roles as $role)
-            <div class="mb-4">
-                <input type="radio" name="role" value="{{ $role->id }}" id="role{{ $role->id }}" class="radio" @if ($user->hasRole($role->name)) checked @endif />
-                <label for="role{{ $role->id }}" class="block text-sm font-medium text-gray-600 ml-2">{{ $role->name }}</label>
-            </div>
-            @endforeach
+        <div class="mb-4">
+            <label for="role" class="block text-sm font-medium text-gray-600">Role</label>
+            <select name="role" id="role" class="mt-1 p-2 w-full border rounded-md" required>
+                <option value="" disabled>Select a role</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}" @if ($user->hasRole($role->name)) selected @endif>{{ $role->name }}</option>
+                @endforeach
+            </select>
         </div>
 
         <button class="btn btn-success w-full text-white">Update Info</button>
     </form>
 </div>
+@endsection
+
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var selectElement = document.getElementById('role');
+        var choices = new Choices(selectElement, {
+            itemSelectText: '', // Remove item selection text
+        });
+    });
+</script>
 @endsection

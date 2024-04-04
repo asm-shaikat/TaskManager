@@ -19,7 +19,7 @@
 
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
     background-color: blue;
-    color: #fff;
+    color: white; /* Change text color to white */
     border-color: #4299e1;
 }
 

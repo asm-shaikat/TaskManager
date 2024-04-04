@@ -37,13 +37,14 @@
             <input type="password" name="password_confirmation" id="password_confirmation" class="mt-1 p-2 w-full border rounded-md" value="{{ old('password_confirmation') }}" required>
         </div>
 
-        <div class="grid grid-cols-4 gap-4 mt-10 mb-10">
-            @foreach($roles as $role)
-            <div class="mb-4">
-                <input type="radio" name="role" value="{{ $role->id }}" id="role{{ $role->id }}" class="radio" />
-                <label for="role{{ $role->id }}" class="block text-sm font-medium text-gray-600 ml-2">{{ $role->name }}</label>
-            </div>
-            @endforeach
+        <div class="mb-4">
+            <label for="role" class="block text-sm font-medium text-gray-600">Role</label>
+            <select name="role" id="role" class="mt-1 p-2 w-full border rounded-md js-choice" required>
+                <option value="" disabled selected>Select a role</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
         </div>
 
         <button class="btn btn-success w-full text-white">ADD</button>
@@ -51,4 +52,12 @@
 
 </div>
 
+@endsection
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+   const element = document.querySelector('.js-choice');
+  const choices = new Choices(element);
+
+</script>
 @endsection
