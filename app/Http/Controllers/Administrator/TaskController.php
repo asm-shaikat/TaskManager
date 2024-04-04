@@ -78,11 +78,11 @@ class TaskController extends Controller
         $task = Task::create($validatedData);
 
         if ($request->hasFile('attachment')) {
-            $attachmentPath = $request->file('attachment')->store('attachments');
-            $task->attachment = $attachmentPath;
-            $task->save();
+            $fileName = $request->file('attachment')->getClientOriginalName();
+            $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
+            $task->attachment = 'attachment/' . $fileName; 
         }
-
+        $task->save();
         return redirect()->route('task.index')->with('success', 'Task added successfully!');
     }
 

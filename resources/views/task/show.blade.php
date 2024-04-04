@@ -19,14 +19,20 @@
             <p class="text-gray-600">Category: {{ $task->category }}</p>
             <p class="text-gray-600">Due Date: {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : 'Not set' }}</p>
         </div>
-
+        @if($task->attachment)
+        <div class="mb-4">
+            <img id="attachment-preview" src="{{ asset('storage/uploads/'.$task->attachment) }}" class="h-60 w-full" alt="">
+        </div>
+        @else
+        <div class="mb-4">
+            <img id="attachment-preview" src="{{ asset('assets/images/default-image.webp') }}" class="h-60 w-full" alt="">
+        </div>
+        @endif
         <form action="{{ route('comments.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <input hidden type="text" name="task_id" value="{{ $task->id }}">
-        
-            <div class="mb-4">
-                <img id="attachment-preview" src="{{ asset('assets/images/default-image.webp') }}" class="h-60 w-full" alt="">
-            </div>
+
+
 
             <div class="mb-4">
                 <label for="content" class="block text-sm font-medium text-gray-600">Add Comment</label>
