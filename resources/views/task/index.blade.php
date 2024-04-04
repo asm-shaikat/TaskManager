@@ -79,5 +79,40 @@
             ]
         });
     });
+
+    // Delete btn
+$(document).on('click', '.delete-btn', function() {
+    var url = $(this).closest('form').attr('action'); // Get the form action URL
+    console.log(url);
+    SweetAlert.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Send an AJAX request to delete the item
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    // If successful, reload the page or update the DataTable
+                    location.reload(); // You can also update the DataTable instead
+                },
+                error: function(xhr) {
+                    console.error(xhr.responseText);
+                    // Handle errors here
+                }
+            });
+        }
+    });
+});
+
 </script>
 @endsection

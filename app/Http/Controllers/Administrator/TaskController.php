@@ -20,40 +20,35 @@ class TaskController extends Controller
 
 
     public function index(Request $request)
-    {
-        if (auth()->user()->hasRole('administrator')) {
-            $query = Task::with('user'); 
-        } else {
-            $query = Task::where('user_id', auth()->id())->with('user'); // Eager loading the user relationship
+{
+    if (auth()->user()->hasRole('administrator')) {
+        $query = Task::with('user'); 
+    } else {
+        $query = Task::where('user_id', auth()->id())->with('user'); // Eager loading the user relationship
     }
 
-        // Use DataTables to handle the request
-        if ($request->ajax()) {
-            return DataTables::of($query)
-    ->addColumn('actions', function ($task) {
-        return '
-            <a href="' . route('task.show', $task->id) . '" class="btn" style="background-color: blue">
-            <img src="' . asset('assets/images/svg/eye-regular.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
-            </a>
-            <a href="' . route('task.edit', $task->id) . '" class="btn" style="background-color: green">
-            <img src="'.asset('assets/images/svg/pencil-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
-            </a>
-            <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">
-                ' . csrf_field() . '
-                ' . method_field('DELETE') . '
-                <button type="submit" class="btn btn-sm" style="background-color: red">
-                    <img src="'.asset('assets/images/svg/trash-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
-                </button>
-            </form>';
-    })
-    ->rawColumns(['actions'])
-    ->toJson();
-
-        }
-        $tasks = $query->get();
-        $tasksCount = $tasks->count();
-        return view('task.index', compact('tasksCount', 'tasks'));
+    // Use DataTables to handle the request
+    if ($request->ajax()) {
+        return DataTables::of($query)
+            ->addColumn('actions', function ($task) {
+                return '
+                    <a href="' . route('task.show', $task->id) . '" class="btn" style="background-color: yellow">
+                    <img src="' . asset('assets/images/svg/eye-regular.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                    </a>
+                    <a href="' . route('task.edit', $task->id) . '" class="btn" style="background-color: green">
+                    <img src="'.asset('assets/images/svg/pencil-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                    </a>
+                    <button type="button" class="btn btn-sm delete-btn" style="background-color: red" data-url="' . route('task.destroy', $task->id) . '">
+                        <img src="'.asset('assets/images/svg/trash-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                    </button>';
+            })
+            ->rawColumns(['actions'])
+            ->toJson();
     }
+    $tasks = $query->get();
+    $tasksCount = $tasks->count();
+    return view('task.index', compact('tasksCount', 'tasks'));
+}
 
     
 

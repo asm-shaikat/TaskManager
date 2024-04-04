@@ -39,10 +39,10 @@
                             </a>
                         </div>
                         <div class="p-2">
-                            <form action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" onsubmit="return confirm('Are you really sure?')">
+                            <form id="delete-role-{{ $role->id }}" action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" >
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                <button type="button" style="background: none; border: none; cursor: pointer;" onclick="confirmDelete('delete-role-{{ $role->id }}')">
                                     <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
                                 </button>
                             </form>
@@ -59,3 +59,22 @@
     </table>
 </div>
 @endsection
+<script>
+// SweetAlert2
+function confirmDelete(formId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this record!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById(formId).submit();
+        }
+    });
+}
+// End SweetAlert2
+</script>

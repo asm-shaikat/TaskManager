@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title')</title>
 
     <!-- Fonts -->
@@ -24,8 +24,12 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/pagination.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/search.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/length.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/datatable/row.css') }}">
     <!-- Choicesjs css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @yield('style')
     <style>
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */
@@ -848,29 +852,29 @@
 <body class="antialiased">
     <div x-data="{ open: true }">
         <!-- Sidebar -->
-        <aside class="w-64 h-screen fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
+        <aside class="w-64 h-screen bg-slate-700 fixed top-0 left-0 overflow-y-auto transition-transform duration-300" :class="{ '-translate-x-full': !open, 'translate-x-0': open }">
             <!-- Sidebar content -->
             <div class="p-4">
-                <a href="/" class="text-2xl font-bold mb-4 block font-serif">Task Manager</a>
-                <small class="p-2 text-xs font-serif block">Welcome {{ Auth::user()->name }}</small>
+                <a href="/" class="text-2xl text-white font-bold mb-4 block font-serif">Task Manager</a>
+                <small class="p-2 text-xs font-serif block text-white">Welcome {{ Auth::user()->name }}</small>
                 <ul>
-                    <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('task*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
+                    <li class="mb-2 p-2 text-white  @if(request()->is('task*')) bg-blue-500  @else hover:bg-blue-600 hover:text-white @endif">
                         <a href="{{ route('task.index') }}" class="block">Tasks</a>
                     </li>
                     @can('create user')
-                    <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('users*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
+                    <li class="mb-2 p-2 text-white @if(request()->is('users*')) bg-blue-500  @else hover:bg-blue-600 hover:text-white @endif">
                         <a href="{{ route('users.index') }}" class="block">Users</a>
                     </li>
                     @endcan
                     @if (auth()->user()->hasRole('administrator'))
-                    <li class="mb-2 p-2 border-b shadow-sm @if(request()->is('administrator/role*')) bg-blue-500 text-white @else hover:bg-blue-600 hover:text-white @endif">
+                    <li class="mb-2 p-2 text-white @if(request()->is('administrator/role*')) bg-blue-500  @else hover:bg-blue-600 hover:text-white @endif">
                         <a href="{{ route('role.index') }}" class="block">Role</a>
                     </li>
                     @endif
-                    <form method="POST" action="{{ route('logout') }}" onsubmit="return confirm('Are you really want to logout?')">
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <li class="mb-2 p-2 border-b shadow-sm hover:bg-blue-600 hover:text-white">
-                            <button type="submit" class="block focus:outline-none">Logout</button>
+                        <li class="mb-2 p-2 text-white   hover:bg-blue-600 hover:text-white">
+                            <button type="button" class="block focus:outline-none" onclick="confirmLogout()">Logout</button>
                         </li>
                     </form>
                 </ul>
@@ -902,9 +906,29 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
     <script>
+        // Datatable
         $(document).ready(function() {
             $('#dtExample').DataTable();
         })
+        // End Datatable
+
+        // SweetAlert2
+        function confirmLogout() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will be logged out',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, logout'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        });
+    }
+    // End SweetAlert2
     </script>
     @yield('script')
 </body>
