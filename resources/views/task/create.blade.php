@@ -26,7 +26,7 @@
 
         <div class="mb-4">
             <label for="user_id" class="block text-sm font-medium text-gray-600">Assign User</label>
-            <select name="user_id" id="user_id" class="mt-1 p-2 w-full border rounded-md" required>
+            <select name="user_id" id="user_id" class="mt-1 p-2 w-full border rounded-md js-example-basic-single" required>
                 <option value="{{ auth()->user()->id }}" selected>Assign to myself ({{ auth()->user()->name }})</option>
                 @foreach ($users as $user)
                 <option value="{{ $user->id }}">{{ $user->name }}</option>
