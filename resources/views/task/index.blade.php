@@ -53,16 +53,10 @@
                 url: '/task',
                 type: 'GET'
             },
-            columns: [{
+            columns: [
+                {
                     data: 'title',
                     name: 'title',
-                    render: function(data, type, row) {
-                        if (type === 'display') {
-                            var url = '/task/' + row.id;
-                            return '<a href="' + url + '" class="block p-2 text-blue-500 hover:underline">' + data + '</a>';
-                        }
-                        return data;
-                    }
                 },
                 {
                     data: 'user.name',
@@ -83,11 +77,6 @@
                     searchable: false
                 }
             ]
-        });
-
-        $('#yajraTaskTable tbody').on('click', 'td:first-child', function() {
-            var data = $('#yajraTaskTable').DataTable().row($(this).closest('tr')).data();
-            window.location.href = data.show_url;
         });
     });
 </script>
