@@ -22,6 +22,7 @@ class UserController extends Controller
 {
     $authid = auth()->user()->id;
     $taskInfo = DB::table('tasks')->where('user_id', $authid)->get();
+    $user_roles = Role::all();
 
     // If the request expects JSON response (for DataTables)
     if(request()->ajax()) {
@@ -47,7 +48,7 @@ class UserController extends Controller
             ->toJson();
     }
 
-    return view('users.index', compact('taskInfo'));
+    return view('users.index', compact('taskInfo','user_roles'));
 }
 
 
