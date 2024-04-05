@@ -20,36 +20,52 @@ class TaskController extends Controller
 
 
     public function index(Request $request)
-{
-    if (auth()->user()->hasRole('administrator')) {
-        $query = Task::with('user'); 
-    } else {
-        $query = Task::where('user_id', auth()->id())->with('user');
-    }
+    {
+        $query = Task::query();
 
-    if ($request->ajax()) {
+        // Check if the user is an administrator
+        if (!auth()->user()->hasRole('administrator')) {
+            // If not an administrator, show only tasks of the authenticated user
+            $query->where('user_id', auth()->id());
+        }
+
+        // Check if the request includes a filter for deleted tasks
+        if ($request->has('show_deleted')) {
+            // If the user wants to view deleted tasks, fetch only soft-deleted tasks
+            $query->onlyTrashed();
+        } else {
+            // Otherwise, fetch non-deleted tasks
+            $query->with('user');
+        }
+
+        // Check if the request includes a filter for task priority
         if ($priority = $request->get('priority_filter')) {
             $query->where('priority', $priority);
         }
-        return DataTables::of($query)
+
+        if ($request->ajax()) {
+            return DataTables::of($query)
             ->addColumn('actions', function ($task) {
+                $softDeleteUrl = route('task.destroy', $task->id) . '?soft_delete=true'; // Adding soft_delete parameter
                 return '
                     <a href="' . route('task.show', $task->id) . '" class="btn" style="background-color: yellow">
                     <img src="' . asset('assets/images/svg/eye-regular.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                     </a>
                     <a href="' . route('task.edit', $task->id) . '" class="btn" style="background-color: green">
-                    <img src="'.asset('assets/images/svg/pencil-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                    <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                     </a>
-                    <button type="button" class="btn btn-sm delete-btn" style="background-color: red" data-url="' . route('task.destroy', $task->id) . '">
-                        <img src="'.asset('assets/images/svg/trash-solid.svg').'" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                    <button type="button" name="soft_delete" class="btn btn-sm delete-btn" style="background-color: red" data-url="' . $softDeleteUrl . '">
+                        <img src="' . asset('assets/images/svg/trash-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                     </button>';
             })
             ->rawColumns(['actions'])
-            ->toJson();
+                ->toJson();
+        }
+
+        return view('task.index');
     }
 
-    return view('task.index');
-}
+
 
 
     
@@ -129,9 +145,17 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
-    {
+    public function destroy(Task $task, Request $request)
+{
+    if ($request->has('soft_delete') && $request->soft_delete == 'true') {
+        // Soft delete
         $task->delete();
-        return redirect()->back()->with('success', 'Task deleted successfully');
+        return redirect()->back()->with('success', 'Task soft deleted successfully');
+    } else {
+        // Hard delete
+        $task->forceDelete();
+        return redirect()->back()->with('success', 'Task permanently deleted successfully');
     }
+}
+
 }

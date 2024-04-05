@@ -155,9 +155,16 @@
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
+            var softDelete = $(this).data('soft-delete');
+            var method = 'DELETE';
+            if (softDelete === 'true') {
+                // If soft delete is requested, change method to POST and add soft_delete parameter
+                method = 'POST';
+                url += '?soft_delete=true';
+            }
             $.ajax({
                 url: url,
-                type: 'DELETE',
+                type: method,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -170,7 +177,9 @@
             });
         }
     });
-    });
+});
+
+
     });
 </script>
 @endsection

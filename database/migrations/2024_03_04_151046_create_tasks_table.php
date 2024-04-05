@@ -21,6 +21,8 @@ return new class extends Migration
             $table->enum('category', ['work', 'personal'])->default('work');
             $table->date('due_date')->nullable();
             $table->string('attachment')->nullable();
+            $table->softDeletes();
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }
