@@ -24,11 +24,13 @@ class TaskController extends Controller
     if (auth()->user()->hasRole('administrator')) {
         $query = Task::with('user'); 
     } else {
-        $query = Task::where('user_id', auth()->id())->with('user'); // Eager loading the user relationship
+        $query = Task::where('user_id', auth()->id())->with('user');
     }
 
-    // Use DataTables to handle the request
     if ($request->ajax()) {
+        if ($priority = $request->get('priority_filter')) {
+            $query->where('priority', $priority);
+        }
         return DataTables::of($query)
             ->addColumn('actions', function ($task) {
                 return '
@@ -45,10 +47,10 @@ class TaskController extends Controller
             ->rawColumns(['actions'])
             ->toJson();
     }
-    $tasks = $query->get();
-    $tasksCount = $tasks->count();
-    return view('task.index', compact('tasksCount', 'tasks'));
+
+    return view('task.index');
 }
+
 
     
 
