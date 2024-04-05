@@ -64,6 +64,26 @@
             var x = table.column(2).search(role).draw();
             console.log(x);
         });
+        // Delete button functionality
+        $(document).on('click', '.delete-btn', function(e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var name = $(this).data('name');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to delete ' + name + '?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
     });
 </script>
 @endsection

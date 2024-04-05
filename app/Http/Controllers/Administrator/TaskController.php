@@ -54,9 +54,14 @@ class TaskController extends Controller
                     <a href="' . route('task.edit', $task->id) . '" class="btn" style="background-color: green">
                     <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                     </a>
-                    <button type="button" name="soft_delete" class="btn btn-sm delete-btn" style="background-color: red" data-url="' . $softDeleteUrl . '">
-                        <img src="' . asset('assets/images/svg/trash-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
-                    </button>';
+                    <form action="'.route('task.destroy', $task->id).'" method="POST" style="display: inline;">
+                            '.csrf_field().'
+                            '.method_field('DELETE').'
+                            <input type="hidden" name="soft_delete" value="true">
+                            <button type="submit" name="soft_delete" class="btn delete-btn" style="background-color: red">
+                                <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                            </button>
+                    </form>';
             })
             ->rawColumns(['actions'])
                 ->toJson();
@@ -147,6 +152,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task, Request $request)
 {
+
     if ($request->has('soft_delete') && $request->soft_delete == 'true') {
         // Soft delete
         $task->delete();

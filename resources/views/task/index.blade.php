@@ -132,54 +132,40 @@
         });
         //Reset date range filtering
         $('#resetBtn').on('click', function() {
-        // Clear priority filter
-        $('#priority_filter').val('');
-        table.column(2).search('').draw();
+            // Clear priority filter
+            $('#priority_filter').val('');
+            table.column(2).search('').draw();
 
-        // Clear start and end date inputs
-        $('#due_date_start').val('');
-        $('#due_date_end').val('');
-        table.columns(3).search('').draw();
-    });
+            // Clear start and end date inputs
+            $('#due_date_start').val('');
+            $('#due_date_end').val('');
+            table.columns(3).search('').draw();
+        });
 
-    // Delete button functionality
-    $(document).on('click', '.delete-btn', function() {
-    var url = $(this).data('url');
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'You will not be able to recover this record!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
+        // Delete button functionality
+
+
+        // Delete button functionality
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+            var form = $(this).closest('form');
+            var name = $(this).data('name');
             var softDelete = $(this).data('soft-delete');
-            var method = 'DELETE';
-            if (softDelete === 'true') {
-                // If soft delete is requested, change method to POST and add soft_delete parameter
-                method = 'POST';
-                url += '?soft_delete=true';
-            }
-            $.ajax({
-                url: url,
-                type: method,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(response) {
-                    location.reload();
-                },
-                error: function(xhr) {
-                    console.error(xhr.responseText);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to delete ' + name + '?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
                 }
             });
-        }
-    });
-});
-
-
+        });
     });
 </script>
 @endsection

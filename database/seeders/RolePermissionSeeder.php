@@ -27,7 +27,7 @@ class RolePermissionSeeder extends Seeder
         $role = Role::create(['name' => 'administrator']);
         Role::create(['name' => 'user']);
         // Assigning role
-        $user->assignRole('administrator', 'user');
+        $user->assignRole('administrator');
         // Permissions list
         $permissions = [
             ['name' => 'user list'],

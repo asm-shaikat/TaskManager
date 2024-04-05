@@ -39,7 +39,7 @@ class UserController extends Controller
                         <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">
                             '.csrf_field().'
                             '.method_field('DELETE').'
-                            <button type="submit" class="btn" style="background-color: red">
+                            <button type="submit" class="btn delete-btn" style="background-color: red">
                                 <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
                             </button>
                         </form>';
