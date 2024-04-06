@@ -26,7 +26,7 @@
             @endforeach
         </select>
     </div>
-    <table class="min-w-full divide-y divide-gray-200" id="yajraUserTable">
+    <table class="min-w-full divide-y divide-gray-200 hidden" id="yajraUserTable">
         <thead class="bg-gray-100">
             <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
