@@ -123,94 +123,96 @@
 <script>
     $(document).ready(function() {
         var table = $('#yajraTaskTable').DataTable({
-        serverSide: true,
-        ajax: {
-            url: '/task',
-            type: 'GET'
-        },
-        columns: [{
-                data: 'title',
-                name: 'title'
+            serverSide: true,
+            ajax: {
+                url: '/task',
+                type: 'GET'
             },
-            {
-                data: 'user.name',
-                name: 'user.name'
-            },
-            {
-                data: 'priority',
-                name: 'priority'
-            },
-            {
-                data: 'due_date',
-                name: 'due_date'
-            },
-            {
-                data: 'actions',
-                name: 'actions',
-                orderable: false,
-                searchable: false
-            }
-        ],
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "All"]
-        ]
-    });
+            columns: [{
+                    data: 'title',
+                    name: 'title'
+                },
+                {
+                    data: 'user.name',
+                    name: 'user.name'
+                },
+                {
+                    data: 'priority',
+                    name: 'priority'
+                },
+                {
+                    data: 'due_date',
+                    name: 'due_date'
+                },
+                {
+                    data: 'actions',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            lengthMenu: [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"]
+            ]
+        });
 
-    var deletedTable;
+        // Toggling between two section
+        var deletedTable;
+        $('.toggle-btn').click(function() {
+            var target = $(this).data('target');
+            $('#' + target).show();
+            $('.max-w-full').not('#' + target).hide();
+            $(this).addClass('active').siblings().removeClass('active');
 
-    $('.toggle-btn').click(function() {
-        var target = $(this).data('target');
-        $('#' + target).show();
-        $('.max-w-full').not('#' + target).hide();
-        $(this).addClass('active').siblings().removeClass('active');
-
-        if (target === 'OrginalData') {
-            table.ajax.url('/task').load(); // Reload the original table
-        } else {
-            if (!deletedTable) {
-                // Initialize the deletedTable DataTable if it hasn't been initialized yet
-                deletedTable = $('#deletedTable').DataTable({
-                    serverSide: true,
-                    ajax: {
-                        url: '/task',
-                        type: 'GET',
-                        data: { show_deleted: true }
-                    },
-                    columns: [{
-                            data: 'title',
-                            name: 'title'
-                        },
-                        {
-                            data: 'user.name',
-                            name: 'user.name'
-                        },
-                        {
-                            data: 'priority',
-                            name: 'priority'
-                        },
-                        {
-                            data: 'due_date',
-                            name: 'due_date'
-                        },
-                        {
-                            data: 'actions',
-                            name: 'actions',
-                            orderable: false,
-                            searchable: false
-                        }
-                    ],
-                    lengthMenu: [
-                        [10, 25, 50, -1],
-                        [10, 25, 50, "All"]
-                    ]
-                });
+            if (target === 'OrginalData') {
+                table.ajax.url('/task').load(); // Reload the original table
             } else {
-                // If the deletedTable DataTable is already initialized, just reload it
-                deletedTable.ajax.url('/task?show_deleted=true').load();
+                if (!deletedTable) {
+                    // Initialize the deletedTable DataTable if it hasn't been initialized yet
+                    deletedTable = $('#deletedTable').DataTable({
+                        serverSide: true,
+                        ajax: {
+                            url: '/task',
+                            type: 'GET',
+                            data: {
+                                show_deleted: true
+                            }
+                        },
+                        columns: [{
+                                data: 'title',
+                                name: 'title'
+                            },
+                            {
+                                data: 'user.name',
+                                name: 'user.name'
+                            },
+                            {
+                                data: 'priority',
+                                name: 'priority'
+                            },
+                            {
+                                data: 'due_date',
+                                name: 'due_date'
+                            },
+                            {
+                                data: 'actions',
+                                name: 'actions',
+                                orderable: false,
+                                searchable: false
+                            }
+                        ],
+                        lengthMenu: [
+                            [10, 25, 50, -1],
+                            [10, 25, 50, "All"]
+                        ]
+                    });
+                } else {
+                    // If the deletedTable DataTable is already initialized, just reload it
+                    deletedTable.ajax.url('/task?show_deleted=true').load();
+                }
             }
-        }
-    });
+        });
 
         // Initialize date pickers
         flatpickr("#due_date_start, #due_date_end", {

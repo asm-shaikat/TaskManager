@@ -19,38 +19,60 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-{
-    $authid = auth()->user()->id;
-    $taskInfo = DB::table('tasks')->where('user_id', $authid)->get();
-    $user_roles = Role::all();
-
-    // If the request expects JSON response (for DataTables)
-    if(request()->ajax()) {
-        return DataTables::eloquent(User::query())
-            ->addColumn('role', function ($user) {
-                // Get the roles associated with the user
-                $roles = $user->roles->pluck('name')->implode(', ');
-                return $roles;
-            })
-            ->addColumn('actions', function ($user) {
-                return '<a href="' . route('users.edit', $user->id) . '" class="btn" style="background-color: green">
-                            <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+    {
+        $authid = auth()->user()->id;
+        $taskInfo = DB::table('tasks')->where('user_id', $authid)->get();
+        $user_roles = Role::all();
+    
+        // Check if the request expects JSON response (for DataTables)
+        if(request()->ajax()) {
+            $query = User::query();
+    
+            // If 'show_deleted' parameter is present, include deleted users
+            if(request()->has('show_deleted')) {
+                $query->onlyTrashed()->where('is_deleted', '=', 0);
+            }
+    
+            return DataTables::eloquent($query)
+                ->addColumn('role', function ($user) {
+                    $roles = $user->roles->pluck('name')->implode(', ');
+                    return $roles;
+                })
+                ->addColumn('actions', function ($user) {
+                    // Define actions based on whether the user is deleted or not
+                    if ($user->deleted_at) {
+                        return '
+                        <a href="' . route('users.restore',$user->id) . '" class="btn" style="background-color: cyan">
+                            <img src="' . asset('assets/images/svg/restore.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                         </a>
-                        <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
-                            <button type="submit" class="btn delete-btn" style="background-color: red">
-                                <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                        <form action="' . route('users.hardDelete', $user->id) . '" method="POST" style="display: inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('PUT') . '
+                            <button type="submit" name="hard_delete" class="btn delete-btn" style="background-color: red">
+                                <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
                             </button>
-                        </form>';
-            })
-            ->rawColumns(['actions']) 
-            ->toJson();
+                        </form>
+                        ';
+                    } else {
+                        return '<a href="' . route('users.edit', $user->id) . '" class="btn" style="background-color: green">
+                                <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                            </a>
+                            <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">
+                                '.csrf_field().'
+                                '.method_field('DELETE').'
+                                <button type="submit" class="btn delete-btn" style="background-color: red">
+                                    <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                                </button>
+                            </form>';
+                    }
+                })
+                ->rawColumns(['actions'])
+                ->toJson();
+        }
+    
+        return view('users.index', compact('taskInfo','user_roles'));
     }
-
-    return view('users.index', compact('taskInfo','user_roles'));
-}
-
+    
 
     /**
      * Show the form for creating a new resource.
@@ -142,5 +164,26 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->back()->with('success', 'User deleted successfully');
+    }
+
+    public function hardDelete(string $id) {
+        try {
+            $user = User::withTrashed()->find($id);
+            $user->update(['is_deleted' => true]);
+            return redirect()->back()->with('success', 'User permanently deleted');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete task. Please try again.');
+        }
+    }
+    
+    
+
+
+    // Task restoring function
+    public function restore(string $id)
+    {   
+        $user = User::withTrashed()->find($id);
+        $user->restore(); 
+        return redirect()->back();
     }
 }

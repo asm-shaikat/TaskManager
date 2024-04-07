@@ -30,6 +30,8 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('/users',UserController::class);
+    Route::get('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::put('/users/{id}/hard-delete', [UserController::class, 'hardDelete'])->name('users.hardDelete');
     Route::get('/', [HomeController::class,'dashboard']);
 });
 
