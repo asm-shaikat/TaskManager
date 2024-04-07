@@ -19,6 +19,7 @@ class Task extends Model
         'category',
         'due_date',
         'attachment',
+        'is_deleted'
     ];
 
     public function user()

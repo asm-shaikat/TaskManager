@@ -47,8 +47,8 @@ Route::middleware(['auth', 'role:administrator'])->prefix('administrator')->grou
 Route::middleware('auth')->group(function () {
     Route::resource('task',TaskController::class);
     Route::get('/tasks/search', [TaskController::class, 'index'])->name('task.search');
-    Route::delete('/task/{id}/hard-delete', [TaskController::class, 'hardDelete'])->name('task.hardDelete');
     Route::get('/task/{id}/restore', [TaskController::class, 'restore'])->name('task.restore');
+    Route::put('/task/{id}/hard-delete', [TaskController::class, 'hardDelete'])->name('task.hardDelete');
     Route::resource('comments',CommentController::class);
     Route::get('/comments/{taskId}',[CommentController::class,'index'])->name('comments.index');
 

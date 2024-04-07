@@ -28,7 +28,7 @@ class TaskController extends Controller
         }
 
         if ($request->has('show_deleted')) {
-            $query->onlyTrashed()->with('user');
+            $query->onlyTrashed()->where('is_deleted', '=', 0)->with('user');
         } else {
             $query->with('user');
         }
@@ -45,14 +45,14 @@ class TaskController extends Controller
                         <a href="' . route('task.restore',$task->id) . '" class="btn" style="background-color: cyan">
                             <img src="' . asset('assets/images/svg/restore.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                         </a>
-                        <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">
+                        <form action="' . route('task.hardDelete', $task->id) . '" method="POST" style="display: inline;">
                             ' . csrf_field() . '
-                            ' . method_field('DELETE') . '
-                            <input type="hidden" name="soft_delete" value="hard_delete">
-                            <button type="submit" class="btn delete-btn" style="background-color: red">
+                            ' . method_field('PUT') . '
+                            <button type="submit" name="hard_delete" class="btn delete-btn" style="background-color: red">
                                 <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
                             </button>
-                        </form>';
+                        </form>
+                        ';
                     } else {
                         // Task is not soft-deleted, provide regular delete button
                         return '
@@ -162,22 +162,25 @@ class TaskController extends Controller
      */
     public function destroy(Task $task, Request $request)
     {
-        $deleteType = $request->input('delete_type', 'soft_delete'); // Get the delete type from the request
-
-        if ($deleteType === 'soft_delete') {
             // Soft delete
             $task->delete();
             return redirect()->back()->with('success', 'Task soft deleted successfully');
-        } elseif ($deleteType === 'hard_delete') {
-            // Hard delete
-            $task->forceDelete();
-            return redirect()->back()->with('success', 'Task permanently deleted successfully');
-        } else {
-            // Handle invalid delete type
-            return redirect()->back()->with('error', 'Invalid delete type');
-        }
     }
 
+    public function hardDelete(string $id) {
+        try {
+            $task = Task::withTrashed()->find($id);
+            $task->update(['is_deleted' => true]);
+            return redirect()->back()->with('success', 'Task permanently deleted');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete task. Please try again.');
+        }
+    }
+    
+    
+
+
+    // Task restoring function
     public function restore(string $id)
     {   
         $task = Task::withTrashed()->find($id);
