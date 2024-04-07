@@ -20,67 +20,69 @@ class TaskController extends Controller
 
 
     public function index(Request $request)
-{
-    $query = Task::query();
+    {
+        $query = Task::query();
 
-    if (!auth()->user()->hasRole('administrator')) {
-        $query->where('user_id', auth()->id());
-    }
+        if (!auth()->user()->hasRole('administrator')) {
+            $query->where('user_id', auth()->id());
+        }
 
-    if ($request->has('show_deleted')) {
-        $query->onlyTrashed()->with('user');
-    } else {
-        $query->with('user');
-    }
+        if ($request->has('show_deleted')) {
+            $query->onlyTrashed()->with('user');
+        } else {
+            $query->with('user');
+        }
 
-    if ($priority = $request->get('priority_filter')) {
-        $query->where('priority', $priority);
-    }
+        if ($priority = $request->get('priority_filter')) {
+            $query->where('priority', $priority);
+        }
 
-    if ($request->ajax()) {
-        return DataTables::of($query)
-            ->addColumn('actions', function ($task) use ($request) {
-                if ($task->deleted_at) {
-                    return '
-                        <form action="'.route('task.destroy', $task->id).'" method="POST" style="display: inline;">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
+        if ($request->ajax()) {
+            return DataTables::of($query)
+                ->addColumn('actions', function ($task) use ($request) {
+                    if ($task->deleted_at) {
+                        return '
+                        <a href="' . route('task.restore',$task->id) . '" class="btn" style="background-color: cyan">
+                            <img src="' . asset('assets/images/svg/restore.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                        </a>
+                        <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
                             <input type="hidden" name="soft_delete" value="hard_delete">
                             <button type="submit" class="btn delete-btn" style="background-color: red">
-                                <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                                <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
                             </button>
                         </form>';
-                } else {
-                    // Task is not soft-deleted, provide regular delete button
-                    return '
+                    } else {
+                        // Task is not soft-deleted, provide regular delete button
+                        return '
                         <a href="' . route('task.show', $task->id) . '" class="btn" style="background-color: yellow">
                             <img src="' . asset('assets/images/svg/eye-regular.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                         </a>
                         <a href="' . route('task.edit', $task->id) . '" class="btn" style="background-color: green">
                             <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                         </a>
-                        <form action="'.route('task.destroy', $task->id).'" method="POST" style="display: inline;">
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
+                        <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">
+                            ' . csrf_field() . '
+                            ' . method_field('DELETE') . '
                             <input type="hidden" name="soft_delete" value="true">
                             <button type="submit" name="soft_delete" class="btn delete-btn" style="background-color: red">
-                                <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                                <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
                             </button>
                         </form>';
-                }
-                
-            })
-            ->rawColumns(['actions'])
-            ->toJson();
+                    }
+                })
+                ->rawColumns(['actions'])
+                ->toJson();
+        }
+
+        return view('task.index');
     }
 
-    return view('task.index');
-}
 
 
 
 
-    
 
     /**
      * Show the form for creating a new resource.
@@ -94,6 +96,7 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -110,7 +113,7 @@ class TaskController extends Controller
         if ($request->hasFile('attachment')) {
             $fileName = $request->file('attachment')->getClientOriginalName();
             $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
-            $task->attachment = 'attachment/' . $fileName; 
+            $task->attachment = 'attachment/' . $fileName;
         }
         $task->save();
         return redirect()->route('task.index')->with('success', 'Task added successfully!');
@@ -123,7 +126,7 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
         $comments = $task->comments;
-        return view('task.show', compact('task','comments'));
+        return view('task.show', compact('task', 'comments'));
     }
 
     /**
@@ -133,10 +136,10 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
         $users = User::all();
-        return view('task.update', compact('task','users'));
+        return view('task.update', compact('task', 'users'));
     }
 
-    /**
+    /**$task
      * Update the specified resource in storage.
      */
     public function update(Request $request, Task $task)
@@ -148,7 +151,7 @@ class TaskController extends Controller
             'priority' => 'required|in:low,medium,high',
             'category' => 'required|in:work,personal',
             'due_date' => 'nullable|date',
-            'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:2048', 
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
         $task->update($validatedData);
         return redirect()->route('task.index')->with('success', 'Task updated successfully!');
@@ -158,24 +161,27 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Task $task, Request $request)
-{
-    $deleteType = $request->input('delete_type', 'soft_delete'); // Get the delete type from the request
+    {
+        $deleteType = $request->input('delete_type', 'soft_delete'); // Get the delete type from the request
 
-    if ($deleteType === 'soft_delete') {
-        // Soft delete
-        $task->delete();
-        return redirect()->back()->with('success', 'Task soft deleted successfully');
-    } elseif ($deleteType === 'hard_delete') {
-        // Hard delete
-        $task->forceDelete();
-        return redirect()->back()->with('success', 'Task permanently deleted successfully');
-    } else {
-        // Handle invalid delete type
-        return redirect()->back()->with('error', 'Invalid delete type');
+        if ($deleteType === 'soft_delete') {
+            // Soft delete
+            $task->delete();
+            return redirect()->back()->with('success', 'Task soft deleted successfully');
+        } elseif ($deleteType === 'hard_delete') {
+            // Hard delete
+            $task->forceDelete();
+            return redirect()->back()->with('success', 'Task permanently deleted successfully');
+        } else {
+            // Handle invalid delete type
+            return redirect()->back()->with('error', 'Invalid delete type');
+        }
     }
-}
 
-
-
-
+    public function restore(string $id)
+    {   
+        $task = Task::withTrashed()->find($id);
+        $task->restore(); 
+        return redirect()->back();
+    }
 }
