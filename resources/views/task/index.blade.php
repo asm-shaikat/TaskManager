@@ -230,7 +230,7 @@
             var startDate = $('#due_date_start').val();
             var endDate = $('#due_date_end').val();
 
-            table.columns(3).search(startDate + '|' + endDate, true, false).draw();
+            table.columns(3).search(startDate + '&' + endDate, true, false).draw();
         });
 
         //Reset date range filtering

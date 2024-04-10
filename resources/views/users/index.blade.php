@@ -70,15 +70,6 @@
         <button class="btn mr-4 toggle-btn" data-target="OrginalData">List</button>
         <button class="btn toggle-btn" data-target="DeleteData" style="background-color: green">Deleted</button>
     </div>
-    <div class="flex mb-4">
-        <label for="role_filter" class="block text-sm font-medium text-gray-700 mr-4">Filter by Role:</label>
-        <select id="role_filter" name="role_filter" class="h-12 block w-1/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <option value="">All Roles</option>
-            @foreach($user_roles as $role)
-            <option value="{{ $role->name }}">{{ $role->name }}</option>
-            @endforeach
-        </select>
-    </div>
     <table class="min-w-full divide-y divide-gray-200" id="deletedTable">
         <thead class="bg-gray-100">
             <tr>
