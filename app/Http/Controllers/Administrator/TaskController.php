@@ -56,10 +56,10 @@ class TaskController extends Controller
                     } else {
                         // Task is not soft-deleted, provide regular delete button
                         return '
-                        <a href="' . route('task.show', $task->id) . '" class="btn" style="background-color: yellow">
-                            <img src="' . asset('assets/images/svg/eye-regular.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                        <a href="' . route('task.show', $task->id) . '" class="btn" style="background-color: yellow;">
+                            <img src="' . asset('assets/images/svg/eye-regular.svg') . '" class="w-4" alt="user-svg">
                         </a>
-                        <a href="' . route('task.edit', $task->id) . '" class="btn" style="background-color: green">
+                        <a href="' . route('task.edit', $task->id) . '" class="btn bg-blue-500">
                             <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                         </a>
                         <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">

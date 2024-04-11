@@ -27,7 +27,7 @@
                 <td>
                     <div class="flex">
                         @foreach ($role->permissions as $permission)
-                        <small class="bg-green-500 m-2 p-1 rounded-xl text-white">{{ $permission->name }}</small>
+                        <small class="bg-blue-500 m-2 p-1 rounded-xl text-white">{{ $permission->name }}</small>
                         @endforeach
                     </div>
                 </td>

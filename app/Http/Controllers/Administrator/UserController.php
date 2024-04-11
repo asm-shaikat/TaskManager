@@ -54,7 +54,7 @@ class UserController extends Controller
                         </form>
                         ';
                     } else {
-                        return '<a href="' . route('users.edit', $user->id) . '" class="btn" style="background-color: green">
+                        return '<a href="' . route('users.edit', $user->id) . '" class="btn bg-blue-500">
                                 <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
                             </a>
                             <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">

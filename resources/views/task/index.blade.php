@@ -38,7 +38,7 @@
             <div class="flex items-center border rounded-md">
                 <input type="text" name="due_date_start" id="due_date_start" class="mt-1 p-2 w-full rounded-md focus:outline-none" placeholder="Select Start Date" value="{{ old('due_date_start') }}">
                 <span id="datepicker-icon-start" class="absolute right-0 mr-2 cursor-pointer">
-                    <i class="fas fa-calendar text-green-500"></i>
+                    <i class="fas fa-calendar text-blue-500"></i>
                 </span>
             </div>
         </div>
@@ -47,7 +47,7 @@
             <div class="flex items-center border rounded-md">
                 <input type="text" name="due_date_end" id="due_date_end" class="mt-1 p-2 w-full rounded-md focus:outline-none" placeholder="Select End Date" value="{{ old('due_date_end') }}">
                 <span id="datepicker-icon-end" class="absolute right-0 mr-2 cursor-pointer">
-                    <i class="fas fa-calendar text-green-500"></i>
+                    <i class="fas fa-calendar text-blue-500"></i>
                 </span>
             </div>
         </div>
