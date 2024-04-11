@@ -7,9 +7,9 @@
         @can('create task')
         <div>
             <a href="{{ route('task.create') }}">
-                <button class="btn h-10 bg-blue-500 hover:bg-blue-700 text-white">
+                <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
                     <span class="mr-2">Create</span>
-                    <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" class="w-4" alt="">
+                    <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-4" alt="">
                 </button>
             </a>
         </div>
@@ -17,7 +17,7 @@
     </div>
     <!-- List and Deleted buttons -->
     <div class="mb-6">
-        <button class="btn mr-4 toggle-btn text-white" data-target="OrginalData" style="background-color: green">List</button>
+        <button class="btn mr-4 toggle-btn text-white" data-target="OrginalData" style="background-color: #0096FF">List</button>
         <button class="btn toggle-btn" data-target="DeleteData">Deleted</button>
     </div>
     <div class="flex mb-4 items-center">
@@ -54,7 +54,7 @@
         <!-- End due date filtering -->
         <!-- Reset button -->
         <div class="w-1/4 mt-4">
-            <button class="btn text-white btn-accent" id="resetBtn">Reset</button>
+            <button class="btn text-white btn-accent bg-[#0096FF]" id="resetBtn">Reset</button>
         </div>
     </div>
 
@@ -95,7 +95,7 @@
     <!-- List and Deleted buttons -->
     <div class="mb-6">
         <button class="btn mr-4 toggle-btn" data-target="OrginalData">List</button>
-        <button class="btn toggle-btn text-white" data-target="DeleteData" style="background-color: green">Deleted</button>
+        <button class="btn toggle-btn text-white" data-target="DeleteData" style="background-color: #0096FF">Deleted</button>
     </div>
 
     <!-- Delete data table -->
@@ -230,7 +230,7 @@
             var startDate = $('#due_date_start').val();
             var endDate = $('#due_date_end').val();
 
-            table.columns(3).search(startDate + '&' + endDate, true, false).draw();
+            table.columns(3).search(startDate + '|' + endDate, true, false).draw();
         });
 
         //Reset date range filtering

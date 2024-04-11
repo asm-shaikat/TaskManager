@@ -856,9 +856,8 @@
             <!-- Sidebar content -->
             <div class="p-4">
                 <a href="/" class="text-2xl text-white font-bold mb-4 block font-serif">Task Manager</a>
-                <small class="p-2 text-xs font-serif block text-white">Welcome {{ Auth::user()->name }}</small>
                 <ul>
-                    <li class="mb-2 p-2 text-white  @if(request()->is('task*')) bg-blue-500  @else hover:bg-blue-600 hover:text-white @endif">
+                    <li class="mb-2 p-2 text-white  @if(request()->is('task*')) bg-blue-500  @else hover:bg-blue-900 hover:text-white @endif">
                         <a href="{{ route('task.index') }}" class="block">Tasks</a>
                     </li>
                     @can('create user')
@@ -871,12 +870,6 @@
                         <a href="{{ route('role.index') }}" class="block">Role</a>
                     </li>
                     @endif
-                    <form id="logout-form" method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <li class="mb-2 p-2 text-white   hover:bg-blue-600 hover:text-white">
-                            <button type="button" class="block focus:outline-none" onclick="confirmLogout()">Logout</button>
-                        </li>
-                    </form>
                 </ul>
             </div>
         </aside>
@@ -886,14 +879,36 @@
         <!-- Main content -->
         <div class="ml-64">
             <!-- Page content goes here -->
-            <header class="bg-white shadow p-4">
-                <!-- Button to toggle the sidebar -->
-                <button @click="open = !open" class=" focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </header>
+            <div class="navbar">
+                <div class="flex-1">
+                    <a class="text-xl p-2 text-bold">Welcome {{ Auth::user()->name }}</a>
+                </div>
+                <div class="flex-none gap-2">
+                    <div class="form-control">
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto" />
+                    </div>
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar border-blue-900">
+                            <div class="w-10 rounded-full">
+                                <img alt="Avater" src="{{ asset('assets/images/avater.png') }}" />
+                            </div>
+                        </div>
+                        <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                            <li>
+                                <a class="justify-between">
+                                    Profile
+                                    <span class="badge">New</span>
+                                </a>
+                            </li>
+                            <li><a>Settings</a></li>
+                            <form id="logout-form" method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <li onclick="confirmLogout()"><a>Logout</a></li>
+                            </form>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
             @yield('content')
         </div>
@@ -914,21 +929,21 @@
 
         // SweetAlert2
         function confirmLogout() {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You will be logged out',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, logout'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.getElementById('logout-form').submit();
-            }
-        });
-    }
-    // End SweetAlert2
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will be logged out',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, logout'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('logout-form').submit();
+                }
+            });
+        }
+        // End SweetAlert2
     </script>
     @yield('script')
 </body>
