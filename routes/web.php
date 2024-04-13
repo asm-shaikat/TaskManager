@@ -7,6 +7,7 @@ use App\Http\Controllers\Administrator\RoleController;
 use App\Http\Controllers\Administrator\TaskController;
 use App\Http\Controllers\Administrator\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Routing\RouteRegistrar;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Permission;
@@ -54,9 +55,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('comments',CommentController::class);
     Route::get('/comments/{taskId}',[CommentController::class,'index'])->name('comments.index');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('profile',[UserProfileController::class,'edit'])->name('profile.edit');
+    Route::put('/profile/{user}/update-name-email', [UserProfileController::class,'updateNameEmail'])->name('profile.updateNameEmail');
+    Route::put('/profile/{user}/update-password', [UserProfileController::class,'updatePassword'])->name('profile.updatePassword');    
+    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';
