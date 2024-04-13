@@ -18,7 +18,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $authid = auth()->user()->id;
         $taskInfo = DB::table('tasks')->where('user_id', $authid)->get();
@@ -32,6 +32,16 @@ class UserController extends Controller
             if(request()->has('show_deleted')) {
                 $query->onlyTrashed()->where('is_deleted', '=', 0);
             }
+
+            if ($request->has('role_filter')) {
+                $roleFilter = $request->input('role_filter');
+                // Filter users by role
+                if (!empty($roleFilter)) {
+                    $query->whereHas('roles', function ($q) use ($roleFilter) {
+                        $q->where('name', $roleFilter);
+                    });
+                }
+            }
     
             return DataTables::eloquent($query)
                 ->addColumn('role', function ($user) {
@@ -43,7 +53,7 @@ class UserController extends Controller
                     if ($user->deleted_at) {
                         return '
                         <a href="' . route('users.restore',$user->id) . '" class="btn" style="background-color: cyan">
-                            <img src="' . asset('assets/images/svg/restore.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                            <img src="' . asset('assets/images/svg/restore.svg') . '" " class="w-4" alt="user-svg">
                         </a>
                         <form action="' . route('users.hardDelete', $user->id) . '" method="POST" style="display: inline;">
                             ' . csrf_field() . '

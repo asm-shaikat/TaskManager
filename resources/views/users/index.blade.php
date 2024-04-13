@@ -33,6 +33,7 @@
             @endforeach
         </select>
     </div>
+
     <table class="min-w-full divide-y divide-gray-200" id="yajraUserTable">
         <thead class="bg-gray-100">
             <tr>
@@ -93,74 +94,89 @@
             serverSide: true,
             ajax: {
                 url: '/users',
-                type: 'GET'
+                type: 'GET',
+                data: function(data) {
+                    data.role_filter = $('#role_filter').val();
+                }
             },
-            columns: [
-                { data: 'name', name: 'name' },
-                { data: 'email', name: 'email' },
-                { data: 'role', name: 'role' },
-                { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            columns: [{
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'email',
+                    name: 'email'
+                },
+                {
+                    data: 'role',
+                    name: 'role'
+                },
+                {
+                    data: 'actions',
+                    name: 'actions',
+                    orderable: false,
+                    searchable: false
+                }
             ]
         });
         var deletedTable;
         // Toggle functionality
         $('.toggle-btn').click(function() {
-        var target = $(this).data('target');
-        $('#' + target).show();
-        $('.max-w-full').not('#' + target).hide();
-        $(this).addClass('active').siblings().removeClass('active');
+            var target = $(this).data('target');
+            $('#' + target).show();
+            $('.max-w-full').not('#' + target).hide();
+            $(this).addClass('active').siblings().removeClass('active');
 
-        if (target === 'OrginalData') {
-            table.ajax.url('/users').load(); // Reload the original table
-        } else {
-            if (!deletedTable) {
-                // Initialize the deletedTable DataTable if it hasn't been initialized yet
-                deletedTable = $('#deletedTable').DataTable({
-                    serverSide: true,
-                    ajax: {
-                        url: '/users',
-                        type: 'GET',
-                        data: { show_deleted: true }
-                    },
-                    columns: [
-                        {
-                            data: 'name', 
-                            name: 'name' 
-                        },
-                        {   
-                             data: 'email',
-                             name: 'email' 
-                        },
-                        {    
-                             data: 'role',
-                             name: 'role' 
-                        },
-                        {    
-                             data: 'actions', 
-                             name: 'actions', 
-                             orderable: false, 
-                             searchable: false 
-                        } // Removed the extra comma here
-                    ],
-                    lengthMenu: [
-                        [10, 25, 50, -1],
-                        [10, 25, 50, "All"]
-                    ]
-                });
+            if (target === 'OrginalData') {
+                table.ajax.url('/users').load(); // Reload the original table
             } else {
-                // If the deletedTable DataTable is already initialized, just reload it
-                deletedTable.ajax.url('/users?show_deleted=true').load();
+                if (!deletedTable) {
+                    // Initialize the deletedTable DataTable if it hasn't been initialized yet
+                    deletedTable = $('#deletedTable').DataTable({
+                        serverSide: true,
+                        ajax: {
+                            url: '/users',
+                            type: 'GET',
+                            data: {
+                                show_deleted: true
+                            }
+                        },
+                        columns: [{
+                                data: 'name',
+                                name: 'name'
+                            },
+                            {
+                                data: 'email',
+                                name: 'email'
+                            },
+                            {
+                                data: 'role',
+                                name: 'role'
+                            },
+                            {
+                                data: 'actions',
+                                name: 'actions',
+                                orderable: false,
+                                searchable: false
+                            } // Removed the extra comma here
+                        ],
+                        lengthMenu: [
+                            [10, 25, 50, -1],
+                            [10, 25, 50, "All"]
+                        ]
+                    });
+                } else {
+                    // If the deletedTable DataTable is already initialized, just reload it
+                    deletedTable.ajax.url('/users?show_deleted=true').load();
+                }
             }
-        }
-    });
-
-        // Custom filtering for Role column
-        $('#role_filter').change(function() {
-            var role = $(this).val();
-            var x = table.column(2).search(role).draw();
-            console.log(x);
         });
-        
+
+        // Event listener for role filter
+        $('#role_filter').on('change', function() {
+            table.ajax.reload();
+        });
+
         // Delete functionality
         $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();

@@ -84,9 +84,9 @@
         @can('create task')
         <div>
             <a href="{{ route('task.create') }}">
-                <button class="btn h-10 bg-blue-500 hover:bg-blue-700 text-white">
+                <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
                     <span class="mr-2">Create</span>
-                    <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" class="w-4" alt="">
+                    <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-4" alt="">
                 </button>
             </a>
         </div>

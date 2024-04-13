@@ -43,7 +43,7 @@ class TaskController extends Controller
                     if ($task->deleted_at) {
                         return '
                         <a href="' . route('task.restore',$task->id) . '" class="btn" style="background-color: cyan">
-                            <img src="' . asset('assets/images/svg/restore.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                            <img src="' . asset('assets/images/svg/restore.svg') . '"class="w-4" alt="user-svg">
                         </a>
                         <form action="' . route('task.hardDelete', $task->id) . '" method="POST" style="display: inline;">
                             ' . csrf_field() . '
