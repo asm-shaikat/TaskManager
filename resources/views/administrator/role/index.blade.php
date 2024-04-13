@@ -25,7 +25,7 @@
             <tr>
                 <td class="border p-2">{{ $role->name }}</td>
                 <td>
-                    <div class="flex">
+                    <div class="flex text-center p-1">
                         @foreach ($role->permissions as $permission)
                         <small class="bg-blue-500 m-2 p-1 rounded-xl text-white">{{ $permission->name }}</small>
                         @endforeach
@@ -33,17 +33,17 @@
                 </td>
                 <td class="border p-2 text-center">
                     <div class="flex gap-2">
-                        <div class="p-2">
+                        <div class="">
                             <a href="{{ route('role.edit', $role->id) }}" class="text-blue-500 hover:underline">
-                                <img src="{{ asset('assets/images/svg/pencil-solid.svg') }}" class="w-4" alt="user-svg">
+                                <button class="btn bg-blue-500"><img src="{{ asset('assets/images/svg/pencil-solid.svg') }}" style="filter: invert(100%);" class="w-4" alt="user-svg"></button>
                             </a>
                         </div>
-                        <div class="p-2">
+                        <div>
                             <form id="delete-role-{{ $role->id }}" action="{{ route('role.destroy', $role->id) }}" method="post" class="inline" >
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" style="background: none; border: none; cursor: pointer;" onclick="confirmDelete('delete-role-{{ $role->id }}')">
-                                    <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" class="w-4" alt="user-svg">
+                                <button type="button" class="btn" style="background-color: red;"   onclick="confirmDelete('delete-role-{{ $role->id }}')">
+                                    <img src="{{ asset('assets/images/svg/trash-solid.svg') }}" style="filter: invert(100%);" class="w-4" alt="user-svg">
                                 </button>
                             </form>
                         </div>

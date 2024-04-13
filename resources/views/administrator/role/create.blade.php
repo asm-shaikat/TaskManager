@@ -24,7 +24,7 @@
 
     <div class="flex justify-between items-center">
         <!-- Submit button -->
-        <button class=" bg-green-500 hover:bg-green-900 text-white font-bold py-2 px-4 rounded mr-2">Submit</button>
+        <button class=" bg-blue-500 hover:bg-green-900 text-white font-bold py-2 px-4 rounded mr-2">Submit</button>
     </div>
 </form>
 

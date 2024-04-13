@@ -29,7 +29,7 @@
 
         <div class="flex justify-between items-center">
             <!-- Submit button -->
-            <button type="submit" class="btn btn-success">Update</button>
+            <button type="submit" class="btn text-white" style="background-color: #0096FF;">Update</button>
         </div>
     </form>
 
