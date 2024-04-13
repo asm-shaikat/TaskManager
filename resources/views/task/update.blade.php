@@ -54,6 +54,21 @@
         </div>
 
         <div class="mb-4">
+            <label for="status" class="block text-sm font-medium text-gray-600">Status</label>
+            <select name="status" id="status" class="mt-1 p-2 w-full border rounded-md js-example-basic-single">
+                <option value="assigned" {{ old('status', $task->status) === 'assigned' ? 'selected' : '' }}>Open/Assigned</option>
+                <option value="in_progress" {{ old('status', $task->status) === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                <option value="on_hold" {{ old('status', $task->status) === 'on_hold' ? 'selected' : '' }}>On Hold</option>
+                <option value="completed" {{ old('status', $task->status) === 'completed' ? 'selected' : '' }}>Completed</option>
+                <option value="closed" {{ old('status', $task->status) === 'closed' ? 'selected' : '' }}>Closed</option>
+                <option value="cancelled" {{ old('status', $task->status) === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                <option value="pending_review" {{ old('status', $task->status) === 'pending_review' ? 'selected' : '' }}>Pending Review</option>
+                <option value="deferred" {{ old('status', $task->status) === 'deferred' ? 'selected' : '' }}>Deferred</option>
+            </select>
+        </div>
+
+
+        <div class="mb-4">
             <label for="priority" class="block text-sm font-medium text-gray-600">Priority</label>
             <select name="priority" id="priority" class="mt-1 p-2 w-full border rounded-md js-example-basic-single" name="state" required>
                 <option value="low" {{ old('priority', $task->priority) === 'low' ? 'selected' : '' }}>Low</option>

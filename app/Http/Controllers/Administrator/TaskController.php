@@ -109,7 +109,6 @@ class TaskController extends Controller
             'attachment' => 'nullable|file|mimes:jpeg,png,gif,pdf,doc,docx|max:2048',
         ]);
         $task = Task::create($validatedData);
-
         if ($request->hasFile('attachment')) {
             $fileName = $request->file('attachment')->getClientOriginalName();
             $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
@@ -148,11 +147,17 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'user_id' => 'required|exists:users,id',
             'description' => 'nullable|string',
+            'status' => 'sometimes',
             'priority' => 'required|in:low,medium,high',
             'category' => 'required|in:work,personal',
             'due_date' => 'nullable|date',
             'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
+
+        if ($request->has('status')) {
+            $task->status = $request->status;
+        }
+        
         $task->update($validatedData);
         return redirect()->route('task.index')->with('success', 'Task updated successfully!');
     }

@@ -4,10 +4,9 @@
 <div class="flex w-full">
     @section('title','Create Task')
     <div class="w-3/4 p-6 m-auto ml-10">
-        <h2 class="text-2xl font-semibold mb-6">Task Details</h2>
-
         <div class="mb-4">
-            <h3 class="text-xl font-semibold">{{ $task->title }}</h3>
+            <h3 class="text-xl font-semibold inline-flex">{{ $task->title }}</h3>
+            <small class="badge badge-accent inline-block text-center">{{ $task->status }}</small>
         </div>
 
         <div class="mb-4">
