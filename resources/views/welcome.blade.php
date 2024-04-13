@@ -27,9 +27,13 @@
     <link rel="stylesheet" href="{{ asset('assets/css/datatable/row.css') }}">
     <!-- Choicesjs css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <!-- Include Tagify CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet">
+
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+    <!-- Include Tagify JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
     @yield('style')
     <style>
         /* ! tailwindcss v3.2.4 | MIT License | https://tailwindcss.com */

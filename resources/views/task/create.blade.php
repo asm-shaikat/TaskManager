@@ -40,6 +40,12 @@
         </div>
 
         <div class="mb-4">
+            <label for="tags" class="block text-sm font-medium text-gray-600">Labels</label>
+            <input type="text" name="lebel" id="lebel" class="mt-1 p-2 w-full border rounded-md">
+        </div>
+
+
+        <div class="mb-4">
             <label for="priority" class="block text-sm font-medium text-gray-600">Priority</label>
             <select name="priority" id="priority" class="mt-1 p-2 w-full border rounded-md js-example-basic-single" name="state" required>
                 <option value="low">Low</option>
@@ -82,7 +88,14 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
 <script>
+     $(document).ready(function() {
+        // Initialize Tagify
+        var input = document.querySelector('#tags');
+        new Tagify(input);
+    });
+
     // Datepickr
     var datepickerIcon = document.getElementById('datepicker-icon');
     datepickerIcon.addEventListener('click', function() {

@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Administrator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Models\Label as Tag;
+use App\Models\LabelTask;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Label;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -97,26 +100,49 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      */
     
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
-            'description' => 'nullable|string',
-            'priority' => 'required|in:low,medium,high',
-            'category' => 'required|in:work,personal',
-            'due_date' => 'nullable|date',
-            'attachment' => 'nullable|file|mimes:jpeg,png,gif,pdf,doc,docx|max:2048',
-        ]);
-        $task = Task::create($validatedData);
-        if ($request->hasFile('attachment')) {
-            $fileName = $request->file('attachment')->getClientOriginalName();
-            $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
-            $task->attachment = 'attachment/' . $fileName;
-        }
-        $task->save();
-        return redirect()->route('task.index')->with('success', 'Task added successfully!');
-    }
+     public function store(Request $request)
+     {
+         $validatedData = $request->validate([
+             'title' => 'required|string|max:255',
+             'user_id' => 'required|exists:users,id',
+             'description' => 'nullable|string',
+             'priority' => 'required|in:low,medium,high',
+             'category' => 'required|in:work,personal',
+             'due_date' => 'nullable|date',
+             'attachment' => 'nullable|file|mimes:jpeg,png,gif,pdf,doc,docx|max:2048',
+             'labels.*' => 'nullable|string|max:255', // Validation for labels array
+         ]);
+     
+         // Create the task
+         $task = Task::create($validatedData);
+     
+         // Upload attachment if provided
+         if ($request->hasFile('attachment')) {
+             $fileName = $request->file('attachment')->getClientOriginalName();
+             $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
+             $task->attachment = 'attachment/' . $fileName;
+         }
+     
+         // Save the task
+         $task->save();
+     
+         // Process labels
+         if ($request->has('label')) {
+             foreach ($request->input('label') as $labelName) {
+                 // Check if the label already exists
+                 $label = Tag::firstOrCreate(['name' => $labelName]);
+     
+                 // Create a record in labeltask table
+                 LabelTask::create([
+                     'task_id' => $task->id,
+                     'label_id' => $label->id
+                 ]);
+             }
+         }
+     
+         return redirect()->route('task.index')->with('success', 'Task added successfully!');
+     }
+     
 
     /**
      * Display the specified resource.
@@ -157,7 +183,7 @@ class TaskController extends Controller
         if ($request->has('status')) {
             $task->status = $request->status;
         }
-        
+
         $task->update($validatedData);
         return redirect()->route('task.index')->with('success', 'Task updated successfully!');
     }
