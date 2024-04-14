@@ -131,31 +131,45 @@ class TaskController extends Controller
      
          // Save the task
          $task->save();
-     
-         // Process labels
-         if (!empty($validatedData['lebel'])) {
-            // Split the input string into individual labels
-            $labels = explode(',', $validatedData['lebel']);
-    
-            // Loop through each label
-            foreach ($labels as $label) {
-                // Trim the label and remove any leading or trailing whitespace
-                $label = trim($label);
-    
-                // Skip empty labels
-                if (empty($label)) {
-                    continue;
+
+        // Process labels
+        if (!empty($validatedData['lebel'])) {
+            // Decode the JSON string into an array
+            $labelsData = json_decode($validatedData['lebel'], true);
+
+            // Check if decoding was successful
+            if (is_array($labelsData)) {
+                // Extract label values from the array of objects
+                $labelValues = array_column($labelsData, 'value');
+
+                // Loop through each label value
+                foreach ($labelValues as $label) {
+                    // Trim the label and remove any leading or trailing whitespace
+                    $label = trim($label);
+
+                    // Skip empty labels
+                    if (empty($label)) {
+                        continue;
+                    }
+
+                    // Check if the label already exists in the database
+                    $existingLabel = Tag::where('label', $label)->first();
+
+                    // If the label doesn't exist, create it
+                    if (!$existingLabel) {
+                        $existingLabel = Tag::create(['label' => $label]);
+                    }
+
+                    // Associate the label with the task in the pivot table
+                    $labelTask = new LabelTask();
+                    $labelTask->task_id = $task->id;
+                    $labelTask->label_id = $existingLabel->id;
+                    $labelTask->save();
                 }
-    
-                // Create or find the label in the labels table
-                $labelModel = Tag::create(['label' => $label]);  
-                // Associate the label with the task in the pivot table
-                $labelTask = new LabelTask();
-                $labelTask->task_id = $task->id;
-                $labelTask->label_id = $labelModel->id;
-                $labelTask->save();
             }
-        }    
+        }
+
+            
      
          return redirect()->route('task.index')->with('success', 'Task added successfully!');
      }
