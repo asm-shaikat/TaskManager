@@ -39,7 +39,7 @@ class UserController extends Controller
                 if (!empty($roleFilter)) {
                     $query->whereHas('roles', function ($q) use ($roleFilter) {
                         $q->where('name', $roleFilter);
-                    });
+                    }); 
                 }
             }
     

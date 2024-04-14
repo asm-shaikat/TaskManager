@@ -36,9 +36,14 @@ class TaskController extends Controller
             $query->with('user');
         }
 
-        if ($priority = $request->get('priority_filter')) {
-            $query->where('priority', $priority);
+        // Filter tasks by priority if the 'priority_filter' parameter is present
+        if ($request->has('priority_filter')) {
+            $priority = $request->input('priority_filter');
+            if (!empty($priority)) {
+                $query->where('priority', $priority);
+            }
         }
+
 
         if ($request->ajax()) {
             return DataTables::of($query)

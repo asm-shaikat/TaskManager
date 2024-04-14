@@ -133,7 +133,10 @@
             serverSide: true,
             ajax: {
                 url: '/task',
-                type: 'GET'
+                type: 'GET',
+                data: function(data) {
+                    data.priority_filter = $('#priority_filter').val();
+                }
             },
             columns: [{
                     data: 'title',
@@ -215,6 +218,10 @@
             }
         });
 
+        // priority filtering
+        $('#priority_filter').on('change', function() {
+            table.ajax.reload();
+        });
         // Initialize date pickers
         flatpickr("#due_date_start, #due_date_end", {
             dateFormat: "Y-m-d",
