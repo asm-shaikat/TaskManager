@@ -115,7 +115,8 @@ class TaskController extends Controller
              'category' => 'required|in:work,personal',
              'due_date' => 'nullable|date',
              'attachment' => 'nullable|file|mimes:jpeg,png,gif,pdf,doc,docx|max:2048',
-             'labels.*' => 'nullable|string|max:255', // Validation for labels array
+             'lebel' => 'nullable', 
+             'lebel.*' => 'nullable|string|max:255',
          ]);
      
          // Create the task
@@ -132,18 +133,29 @@ class TaskController extends Controller
          $task->save();
      
          // Process labels
-         if ($request->has('label')) {
-             foreach ($request->input('label') as $labelName) {
-                 // Check if the label already exists
-                 $label = Tag::firstOrCreate(['name' => $labelName]);
-     
-                 // Create a record in labeltask table
-                 LabelTask::create([
-                     'task_id' => $task->id,
-                     'label_id' => $label->id
-                 ]);
-             }
-         }
+         if (!empty($validatedData['lebel'])) {
+            // Split the input string into individual labels
+            $labels = explode(',', $validatedData['lebel']);
+    
+            // Loop through each label
+            foreach ($labels as $label) {
+                // Trim the label and remove any leading or trailing whitespace
+                $label = trim($label);
+    
+                // Skip empty labels
+                if (empty($label)) {
+                    continue;
+                }
+    
+                // Create or find the label in the labels table
+                $labelModel = Tag::create(['label' => $label]);  
+                // Associate the label with the task in the pivot table
+                $labelTask = new LabelTask();
+                $labelTask->task_id = $task->id;
+                $labelTask->label_id = $labelModel->id;
+                $labelTask->save();
+            }
+        }    
      
          return redirect()->route('task.index')->with('success', 'Task added successfully!');
      }
@@ -156,7 +168,8 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
         $comments = $task->comments;
-        return view('task.show', compact('task', 'comments'));
+        $tags = Task::with('labels')->findOrFail($id);
+        return view('task.show', compact('task', 'comments','tags'));
     }
 
     /**

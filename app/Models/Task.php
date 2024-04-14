@@ -30,4 +30,11 @@ class Task extends Model
     public function comments() {
         return $this->hasMany(Comment::class);
     }
+
+    public function labels()
+    {
+        return $this->belongsToMany(Label::class, 'labeltask', 'task_id', 'label_id');
+    }
+
+
 }

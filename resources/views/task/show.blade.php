@@ -8,7 +8,11 @@
             <h3 class="text-xl font-semibold inline-flex">{{ $task->title }}</h3>
             <small class="badge badge-accent inline-block text-center">{{ $task->status }}</small>
         </div>
-
+        <div>
+            @foreach ($tags->labels as $label)
+            <span>{{ $label->label }}</span>
+            @endforeach
+        </div>
         <div class="mb-4">
             <small class="text-gray-800">{{ $task->description }}</small>
         </div>

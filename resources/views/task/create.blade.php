@@ -40,7 +40,7 @@
         </div>
 
         <div class="mb-4">
-            <label for="tags" class="block text-sm font-medium text-gray-600">Labels</label>
+            <label for="lebel" class="block text-sm font-medium text-gray-600">Labels</label>
             <input type="text" name="lebel" id="lebel" class="mt-1 p-2 w-full border rounded-md">
         </div>
 
@@ -92,7 +92,7 @@
 <script>
      $(document).ready(function() {
         // Initialize Tagify
-        var input = document.querySelector('#tags');
+        var input = document.querySelector('#lebel');
         new Tagify(input);
     });
 
