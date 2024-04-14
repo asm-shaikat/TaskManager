@@ -200,25 +200,62 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Task $task)
-    {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,id',
-            'description' => 'nullable|string',
-            'status' => 'sometimes',
-            'priority' => 'required|in:low,medium,high',
-            'category' => 'required|in:work,personal',
-            'due_date' => 'nullable|date',
-            'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
-        ]);
+{
+    $validatedData = $request->validate([
+        'title' => 'required|string|max:255',
+        'user_id' => 'required|exists:users,id',
+        'description' => 'nullable|string',
+        'status' => 'sometimes',
+        'priority' => 'required|in:low,medium,high',
+        'category' => 'required|in:work,personal',
+        'due_date' => 'nullable|date',
+        'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+        'lebel' => 'nullable|array',
+        'lebel.*' => 'nullable|string|max:255',
+    ]);
 
-        if ($request->has('status')) {
-            $task->status = $request->status;
-        }
-
-        $task->update($validatedData);
-        return redirect()->route('task.index')->with('success', 'Task updated successfully!');
+    if ($request->has('status')) {
+        $task->status = $request->status;
     }
+
+    // Update the task with validated data
+    $task->update($validatedData);
+
+    // Process labels
+    if (!empty($validatedData['lebel'])) {
+        // Decode the JSON string into an array
+        $labelsData = $validatedData['lebel'];
+
+        // Extract label values from the array of objects
+        $labelValues = array_column($labelsData, 'value');
+
+        // Sync the labels for the task
+        $task->labels()->detach(); // Remove existing labels
+        foreach ($labelValues as $label) {
+            // Trim the label and remove any leading or trailing whitespace
+            $label = trim($label);
+
+            // Skip empty labels
+            if (empty($label)) {
+                continue;
+            }
+
+            // Check if the label already exists in the database
+            $existingLabel = Tag::where('label', $label)->first();
+
+            // If the label doesn't exist, create it
+            if (!$existingLabel) {
+                $existingLabel = Tag::create(['label' => $label]);
+            }
+
+            // Associate the label with the task in the pivot table
+            $task->labels()->attach($existingLabel->id);
+        }
+    }
+
+    return redirect()->route('task.index')->with('success', 'Task updated successfully!');
+}
+
 
     /**
      * Remove the specified resource from storage.

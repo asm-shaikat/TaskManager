@@ -53,6 +53,8 @@
             <textarea name="description" id="description" class="mt-1 p-2 w-full border rounded-md">{{ old('description', $task->description) }}</textarea>
         </div>
 
+
+
         <div class="mb-4">
             <label for="status" class="block text-sm font-medium text-gray-600">Status</label>
             <select name="status" id="status" class="mt-1 p-2 w-full border rounded-md js-example-basic-single">
@@ -117,7 +119,13 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
 <script>
+     $(document).ready(function() {
+        // Initialize Tagify
+        var input = document.querySelector('#lebel');
+        new Tagify(input);
+    });
     // file preview
     $(document).ready(function() {
         $('#attachment').change(function(e) {

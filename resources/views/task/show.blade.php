@@ -2,15 +2,14 @@
 @section('title','Task View')
 @section('content')
 <div class="flex w-full">
-    @section('title','Create Task')
-    <div class="w-3/4 p-6 m-auto ml-10">
+    <div class="w-3/4 ml-4">
         <div class="mb-4">
             <h3 class="text-xl font-semibold inline-flex">{{ $task->title }}</h3>
             <small class="badge badge-accent inline-block text-center">{{ $task->status }}</small>
         </div>
         <div>
             @foreach ($tags->labels as $label)
-            <span>{{ $label->label }}</span>
+            <span class="bg-slate-200 rounded-lg p-1 font-extralight">{{ $label->label }}</span>
             @endforeach
         </div>
         <div class="mb-4">
@@ -18,7 +17,13 @@
         </div>
 
         <div class="mb-4">
-            <p class="text-gray-600">Priority: {{ $task->priority }}</p>
+            @if($task->priority === 'low')
+            <p class="text-green-600 priority-low">Priority: {{ $task->priority }}</p>
+            @elseif($task->priority === 'medium')
+            <p class="text-yellow-600 priority-medium">Priority: {{ $task->priority }}</p>
+            @elseif($task->priority === 'high')
+            <p class="text-red-600 priority-high">Priority: {{ $task->priority }}</p>
+            @endif
             <p class="text-gray-600">Category: {{ $task->category }}</p>
             <p class="text-gray-600">Due Date: {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : 'Not set' }}</p>
         </div>
@@ -48,11 +53,15 @@
         <h3 class="text-xl font-semibold">Comments</h3>
         <div id="comments-container" class="mb-4" style="max-height: 600px; overflow-y: auto;">
             <div class="sticky top-0 bg-white z-10">
-                @foreach($comments as $comment)
+                @forelse($comments as $comment)
                 <div class="chat chat-start">
                     <div class="chat-image avatar">
                         <div class="w-10 rounded-full">
-                            <img alt="Tailwind CSS chat bubble component" src="{{ asset('assets/images/avater.png') }}" />
+                            @if ($comment->user->image)
+                            <img alt="User Avatar" src="{{ asset($comment->user->image) }}" />
+                            @else
+                            <img alt="Default Avatar" src="{{ asset('assets/images/avater.png') }}" />
+                            @endif
                         </div>
                     </div>
                     <div class="chat-header">
@@ -61,10 +70,22 @@
                     </div>
                     <div class="chat-bubble bg-blue-400 text-white">{{ $comment->content }}</div>
                 </div>
-                @endforeach
+                @empty
+                <div class="chat chat-start">
+                    <div class="chat-image avatar">
+                        <div class="w-10 rounded-full">
+                            <img alt="Default Avatar" src="{{ asset('assets/no-data.png') }}" />
+                        </div>
+                    </div>
+                    <div class="chat-header">
+                        No comments found
+                    </div>
+                </div>
+                @endforelse
             </div>
         </div>
     </div>
+
 
 </div>
 @endsection
