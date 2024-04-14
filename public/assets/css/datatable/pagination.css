@@ -6,7 +6,7 @@
     border-radius: 0.25rem; 
     border: 1px solid #ddd; 
     background-color: #0096FF;
-    color: #ffffff;
+    color: #ffffff !important
 }
 
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {

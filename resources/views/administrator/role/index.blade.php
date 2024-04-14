@@ -23,7 +23,7 @@
         <tbody>
             @forelse($roles as $role)
             <tr>
-                <td class="border p-2">{{ $role->name }}</td>
+                <td class="border p-1">{{ $role->name }}</td>
                 <td>
                     <div class="flex text-center p-1">
                         @foreach ($role->permissions as $permission)
