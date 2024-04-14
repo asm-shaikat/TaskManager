@@ -24,15 +24,25 @@
         <button class="btn mr-4 toggle-btn text-white" data-target="OrginalData" style="background-color: #0096FF">List</button>
         <button class="btn toggle-btn" data-target="DeleteData">Deleted</button>
     </div>
-    <div class="flex mb-4">
-        <label for="role_filter" class="block text-sm font-medium text-gray-700 mr-4">Filter by Role:</label>
-        <select id="role_filter" name="role_filter" class="h-12 block w-1/4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <option value="">All Roles</option>
-            @foreach($user_roles as $role)
-            <option value="{{ $role->name }}">{{ $role->name }}</option>
-            @endforeach
-        </select>
+
+    <div class="flex gap-4">
+        <div class="w-1/4 mb-4">
+            <label for="role_filter" class="block text-sm font-medium text-gray-700 mr-4 p-1">Filter by Role:</label>
+            <select id="role_filter" name="role_filter" class="h-12 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="">All Roles</option>
+                @foreach($user_roles as $role)
+                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <!-- Custom searching -->
+        <div class="w-1/4 mr-4">
+            <label for="custom_search">Search:</label>
+            <input type="text" id="custom_search" class="mt-1 h-12 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
     </div>
+
 
     <table class="min-w-full divide-y divide-gray-200" id="yajraUserTable">
         <thead class="bg-gray-100">
@@ -117,7 +127,9 @@
                     orderable: false,
                     searchable: false
                 }
-            ]
+            ],
+            lengthChange: false,
+
         });
         var deletedTable;
         // Toggle functionality
@@ -175,6 +187,12 @@
         // Event listener for role filter
         $('#role_filter').on('change', function() {
             table.ajax.reload();
+        });
+
+        // custom search function
+        $('#custom_search').on('keyup', function() {
+            var searchTerm = $(this).val();
+            table.search(searchTerm).draw(); // Apply the search term and redraw the DataTable
         });
 
         // Delete functionality

@@ -51,6 +51,13 @@
                 </span>
             </div>
         </div>
+
+        <!-- Custom searching -->
+        <div class="w-1/4 mr-4">
+            <label for="custom_search" class="block text-sm font-medium text-gray-700">Search:</label>
+            <input type="text" id="custom_search" class="mt-1 h-12 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <!-- End Custom searching -->
         <!-- End due date filtering -->
         <!-- Reset button -->
         <div class="w-1/4 mt-4">
@@ -151,10 +158,7 @@
                     searchable: false
                 }
             ],
-            lengthMenu: [
-                [10, 25, 50, -1],
-                [10, 25, 50, "All"]
-            ]
+            lengthChange: false,
         });
 
         // Toggling between two section
@@ -202,10 +206,7 @@
                                 searchable: false
                             }
                         ],
-                        lengthMenu: [
-                            [10, 25, 50, -1],
-                            [10, 25, 50, "All"]
-                        ]
+                        lengthChange: false,
                     });
                 } else {
                     // If the deletedTable DataTable is already initialized, just reload it
@@ -220,9 +221,8 @@
         });
 
         // Priority filtering
-        $('#priority_filter').change(function() {
-            var priority = $(this).val();
-            table.column(2).search(priority).draw();
+        $('#priority_filter').on('change', function() {
+            table.ajax.reload();
         });
 
         // Date range filtering
@@ -243,6 +243,11 @@
             $('#due_date_start').val('');
             $('#due_date_end').val('');
             table.columns(3).search('').draw();
+        });
+
+        $('#custom_search').on('keyup', function() {
+            var searchTerm = $(this).val();
+            table.search(searchTerm).draw(); // Apply the search term and redraw the DataTable
         });
 
         // Delete button functionality
