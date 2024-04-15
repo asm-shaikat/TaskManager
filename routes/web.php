@@ -49,6 +49,10 @@ Route::middleware(['auth', 'role:administrator'])->prefix('administrator')->grou
 
 Route::middleware('auth')->group(function () {
     Route::resource('task',TaskController::class);
+    Route::put('/task/{task}', [TaskController::class, 'updateStatus'])->name('task.updateStatus');
+    Route::put('/task/{task}/update-priority', [TaskController::class, 'updatePriority'])->name('task.updatePriority');
+    Route::put('/task/{task}/update-category', [TaskController::class, 'updateCategory'])->name('task.updateCategory');
+    Route::put('/task/{task}/update-due-date', [TaskController::class, 'updateDueDate'])->name('task.updateDueDate');
     Route::get('/tasks/search', [TaskController::class, 'index'])->name('task.search');
     Route::get('/task/{id}/restore', [TaskController::class, 'restore'])->name('task.restore');
     Route::put('/task/{id}/hard-delete', [TaskController::class, 'hardDelete'])->name('task.hardDelete');

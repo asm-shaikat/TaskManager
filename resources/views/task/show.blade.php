@@ -4,28 +4,61 @@
 <div class="flex w-full">
     <div class="w-3/4 ml-4">
         <div class="mb-4">
-            <h3 class="text-xl font-semibold inline-flex">{{ $task->title }}</h3>
-            <small class="badge badge-accent inline-block text-center">{{ $task->status }}</small>
-        </div>
-        <div>
-            @foreach ($tags->labels as $label)
-            <span class="bg-slate-200 rounded-lg p-1 font-extralight">{{ $label->label }}</span>
-            @endforeach
-        </div>
-        <div class="mb-4">
-            <small class="text-gray-800">{{ $task->description }}</small>
+            <h3 class="text-2xl font-semibold inline-flex">{{ $task->title }}</h3>
+            <div class="mb-4">
+                <select id="status-select" class="form-select bg-white border" onchange="updateTaskStatus(this.value)">
+                    <option value="todo" {{ $task->status === 'todo' ? 'selected' : '' }}>To Do</option>
+                    <option value="backlog" {{ $task->status === 'backlog' ? 'selected' : '' }}>Backlog</option>
+                    <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                    <option value="in_review" {{ $task->status === 'in_review' ? 'selected' : '' }}>In Review</option>
+                    <option value="done" {{ $task->status === 'done' ? 'selected' : '' }}>Done</option>
+                    <option value="achieved" {{ $task->status === 'achieved' ? 'selected' : '' }}>Achieved</option>
+                </select>
+            </div>
         </div>
 
         <div class="mb-4">
-            @if($task->priority === 'low')
-            <p class="text-green-600 priority-low">Priority: {{ $task->priority }}</p>
-            @elseif($task->priority === 'medium')
-            <p class="text-yellow-600 priority-medium">Priority: {{ $task->priority }}</p>
-            @elseif($task->priority === 'high')
-            <p class="text-red-600 priority-high">Priority: {{ $task->priority }}</p>
-            @endif
-            <p class="text-gray-600">Category: {{ $task->category }}</p>
-            <p class="text-gray-600">Due Date: {{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : 'Not set' }}</p>
+            <small class="text-gray-800 text-base">{{ $task->description }}</small>
+        </div>
+
+        <div>
+            @foreach ($tags->labels as $label)
+            <span class="bg-slate-200 rounded-lg text-xs badge">{{ $label->label }}</span>
+            @endforeach
+        </div>
+
+        <div class="mb-4">
+            <div class="mb-4 flex items-center">
+                <h4 class="text-lg font-semibold mr-2">Priority:</h4>
+                <div class="flex items-center">
+                    <select id="priority-select" class="form-select bg-white border" onchange="updateTaskPriority(this.value)">
+                        <option value="low" {{ $task->priority === 'low' ? 'selected' : '' }}>Low</option>
+                        <option value="medium" {{ $task->priority === 'medium' ? 'selected' : '' }}>Medium</option>
+                        <option value="high" {{ $task->priority === 'high' ? 'selected' : '' }}>High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-4 flex items-center">
+                <h4 class="text-lg font-semibold mr-2">Category:</h4>
+                <div class="flex items-center">
+                    <select id="category-select" class="form-select bg-white border" onchange="updateTaskCategory(this.value)">
+                        <option value="work" {{ $task->category === 'work' ? 'selected' : '' }}>Work</option>
+                        <option value="personal" {{ $task->category === 'personal' ? 'selected' : '' }}>Personal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-4 relative w-1/3">
+                <label for="due_date" class="block text-sm font-medium text-gray-600">Due Date</label>
+                <div class="flex items-center border rounded-md">
+                <input type="text" name="due_date" id="datepicker" class="mt-1 p-2 rounded-md focus:outline-none" placeholder="Select Due Date" value="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}" onchange="updateTaskDueDate(this.value)">
+                    <span id="datepicker-icon" class="absolute right-0 mr-2 cursor-pointer">
+                        <i class="fas fa-calendar text-green-500"></i>
+                    </span>
+                </div>
+            </div>
+
         </div>
         @if($task->attachment)
         <div class="mb-4">
@@ -90,7 +123,74 @@
 </div>
 @endsection
 @section('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <script>
+    // Update status
+    function updateTaskStatus(status) {
+        var taskId = '{{$task-> id}}';
+        $.ajax({
+            type: 'PUT',
+            url: '/task/' + taskId,
+            data: {
+                _token: '{{ csrf_token() }}',
+                status: status
+            },
+            success: function(response) {
+                // Update UI or show success message
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+            }
+        });
+    }
+    // End of Update Status 
+    // Update priority status
+    function updateTaskPriority(priority) {
+        var taskId = '{{ $task->id }}'; // Ensure taskId is a string
+        $.ajax({
+            type: 'PUT',
+            url: '/task/' + taskId + '/update-priority',
+            data: {
+                _token: '{{ csrf_token() }}',
+                priority: priority
+            },
+            success: function(response) {
+                // Handle success response or UI update
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+            }
+        });
+    }
+    // End of Update Status
+    // Start Update Category
+    function updateTaskCategory(category) {
+        var taskId = '{{ $task->id }}';
+        $.ajax({
+            type: 'PUT',
+            url: '/task/' + taskId + '/update-category',
+            data: {
+                _token: '{{ csrf_token() }}',
+                category: category
+            },
+            success: function(response) {
+                // Handle success response or UI update
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+            }
+        });
+    }
+
+
+    // End  Update Category
+    // Select2
+    $(document).ready(function() {
+        $('.js-example-basic-single').select2();
+        $('#category').select2();
+    });
+    // End of Select2
     // file preview
     $(document).ready(function() {
         $('#attachment').change(function(e) {
@@ -108,5 +208,36 @@
         }
         scrollToBottom();
     });
+
+    // Start due date
+    function updateTaskDueDate(dueDate) {
+        var taskId = '{{ $task->id }}';
+        $.ajax({
+            type: 'PUT',
+            url: '/task/' + taskId + '/update-due-date',
+            data: {
+                _token: '{{ csrf_token() }}',
+                due_date: dueDate
+            },
+            success: function(response) {
+                // Handle success response or UI update
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+            }
+        });
+    }
+    // End due date
+
+    // Datepickr
+    var datepickerIcon = document.getElementById('datepicker-icon');
+    datepickerIcon.addEventListener('click', function() {
+        var datepickerInput = document.getElementById('datepicker');
+        datepickerInput.focus();
+    });
+    flatpickr("#datepicker", {
+        dateFormat: "Y-m-d",
+    });
+    // End Datepickr
 </script>
 @endsection

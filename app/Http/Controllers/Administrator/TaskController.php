@@ -263,6 +263,58 @@ class TaskController extends Controller
     return redirect()->route('task.index')->with('success', 'Task updated successfully!');
 }
 
+    public function updateStatus(Request $request, Task $task)
+    {
+        $request->validate([
+            'status' => ['required', 'string', 'in:todo,in_progress,backlog,in_review,done,achieved'],
+        ]);
+
+        $task->status = $request->status;
+        $task->save();
+
+        return response()->json(['message' => 'Task status updated successfully'], 200);
+    }
+
+
+    public function updatePriority(Request $request, Task $task)
+    {
+        $request->validate([
+            'priority' => ['required', 'string', 'in:low,medium,high'],
+        ]);
+
+        $task->priority = $request->priority;
+        $task->save();
+
+        return response()->json(['message' => 'Task priority updated successfully'], 200);
+    }
+
+
+    public function updateCategory(Request $request, Task $task)
+    {
+        $request->validate([
+            'category' => ['required', 'string', 'in:work,personal'],
+        ]);
+
+        $task->category = $request->category;
+        $task->save();
+
+        return response()->json(['message' => 'Task category updated successfully'], 200);
+    }
+
+    public function updateDueDate(Request $request, Task $task)
+    {
+        $request->validate([
+            'due_date' => ['nullable', 'date'],
+        ]);
+
+        $task->due_date = $request->due_date;
+        $task->save();
+
+        return response()->json(['message' => 'Task due date updated successfully'], 200);
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.
