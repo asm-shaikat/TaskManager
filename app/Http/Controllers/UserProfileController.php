@@ -50,6 +50,13 @@ class UserProfileController extends Controller
         ]);
     }
 
+    public function change_password()
+    {
+        return view('profile.update-password', [
+            'user' => Auth::user(),
+        ]);
+    }
+
     public function updateNameEmail(Request $request, $id)
     {
         $request->validate([

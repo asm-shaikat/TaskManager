@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/comments/{taskId}',[CommentController::class,'index'])->name('comments.index');
 
     Route::get('profile',[UserProfileController::class,'edit'])->name('profile.edit');
+    Route::get('change-password',[UserProfileController::class,'change_password'])->name('profile.update_password');
     Route::put('/profile/{user}/update-name-email', [UserProfileController::class,'updateNameEmail'])->name('profile.updateNameEmail');
     Route::put('/profile/{user}/update-password', [UserProfileController::class,'updatePassword'])->name('profile.updatePassword');    
     // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

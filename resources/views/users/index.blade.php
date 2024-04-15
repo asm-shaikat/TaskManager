@@ -11,7 +11,7 @@
         @can('create user')
         <div>
             <a href="{{ route('users.create') }}">
-                <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
+                <button class="btn h-10 w-44 bg-slate-700 hover:bg-blue-700 text-white">
                     <p class="p-4">Create</p>
                     <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-4" alt="">
                 </button>
@@ -21,7 +21,7 @@
     </div>
     <!-- List and Deleted buttons -->
     <div class="mb-6">
-        <button class="btn mr-4 toggle-btn text-white" data-target="OrginalData" style="background-color: #0096FF">List</button>
+        <button class="btn mr-4 toggle-btn text-white bg-slate-700" data-target="OrginalData">List</button>
         <button class="btn toggle-btn" data-target="DeleteData">Deleted</button>
     </div>
 
@@ -68,7 +68,7 @@
         @can('create user')
         <div>
             <a href="{{ route('users.create') }}">
-                <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
+                <button class="btn h-10 w-44 bg-slate-700 hover:bg-blue-700 text-white">
                     <p class="p-4">Create</p>
                     <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-6" alt="">
                 </button>
@@ -79,7 +79,7 @@
     <!-- List and Deleted buttons -->
     <div class="mb-6">
         <button class="btn mr-4 toggle-btn" data-target="OrginalData">List</button>
-        <button class="btn toggle-btn text-white" data-target="DeleteData" style="background-color: #0096FF">Deleted</button>
+        <button class="btn toggle-btn text-white bg-slate-700" data-target="DeleteData">Deleted</button>
     </div>
     <table class="min-w-full divide-y divide-gray-200" id="deletedTable">
         <thead class="bg-gray-100">

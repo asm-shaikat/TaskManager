@@ -5,7 +5,7 @@
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-2xl font-bold">Role Management</h2>
         <a href="{{ route('role.create') }}">
-            <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
+            <button class="btn h-10 w-44 bg-slate-700 hover:bg-blue-700 text-white">
                 <p class="p-4">Create</p>
                 <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-6" alt="">
             </button>
@@ -27,7 +27,7 @@
                 <td>
                     <div class="flex text-center p-1">
                         @foreach ($role->permissions as $permission)
-                        <small class="bg-blue-500 m-2 p-1 rounded-xl text-white">{{ $permission->name }}</small>
+                        <small class="bg-slate-700 m-1 p-2 rounded-xl text-white">{{ $permission->name }}</small>
                         @endforeach
                     </div>
                 </td>

@@ -2,12 +2,12 @@
 @section('title', 'Task List')
 @section('content')
 <div class="max-w-full mx-auto mt-8 p-6 bg-white rounded-md shadow-md" id="OrginalData">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold">My Tasks</h2>
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-semibold mb-2">My Tasks</h2>
         @can('create task')
-        <div>
+        <div class="-mt-12 flex items-center"> <!-- Added flex and items-center here -->
             <a href="{{ route('task.create') }}">
-                <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
+                <button class="btn h-10 w-44 bg-slate-700 hover:bg-blue-700 text-white">
                     <span class="mr-2">Create</span>
                     <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-4" alt="">
                 </button>
@@ -15,55 +15,57 @@
         </div>
         @endcan
     </div>
+
     <!-- List and Deleted buttons -->
     <div class="mb-6">
-        <button class="btn mr-4 toggle-btn text-white" data-target="OrginalData" style="background-color: #0096FF">List</button>
+        <button class="btn mr-4 toggle-btn text-white bg-slate-700" data-target="OrginalData">List</button>
         <button class="btn toggle-btn" data-target="DeleteData">Deleted</button>
     </div>
     <div class="flex mb-4 items-center">
-        <!-- Priority filtering -->
-        <div class="w-1/4 mr-4">
-            <label for="priority_filter" class="block text-sm font-medium text-gray-700">Filter by Priority:</label>
-            <select id="priority_filter" name="priority_filter" class="mt-1 h-12 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <option value="">All Priorities</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-        </div>
-        <!-- End of priority filtering -->
-        <!-- Due date -->
-        <div class="relative w-1/4 mr-4">
-            <label for="due_date_start" class="block text-sm font-medium text-gray-600">Due Date Start:</label>
-            <div class="flex items-center border rounded-md">
-                <input type="text" name="due_date_start" id="due_date_start" class="mt-1 p-2 w-full rounded-md focus:outline-none" placeholder="Select Start Date" value="{{ old('due_date_start') }}">
-                <span id="datepicker-icon-start" class="absolute right-0 mr-2 cursor-pointer">
-                    <i class="fas fa-calendar text-blue-500"></i>
-                </span>
-            </div>
-        </div>
-        <div class="relative w-1/4 mr-4">
-            <label for="due_date_end" class="block text-sm font-medium text-gray-600">Due Date End:</label>
-            <div class="flex items-center border rounded-md">
-                <input type="text" name="due_date_end" id="due_date_end" class="mt-1 p-2 w-full rounded-md focus:outline-none" placeholder="Select End Date" value="{{ old('due_date_end') }}">
-                <span id="datepicker-icon-end" class="absolute right-0 mr-2 cursor-pointer">
-                    <i class="fas fa-calendar text-blue-500"></i>
-                </span>
-            </div>
-        </div>
-
-        <!-- Custom searching -->
-        <div class="w-1/4 mr-4">
-            <label for="custom_search" class="block text-sm font-medium text-gray-700">Search:</label>
-            <input type="text" id="custom_search" class="mt-1 h-12 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-        </div>
-        <!-- End Custom searching -->
-        <!-- End due date filtering -->
-        <!-- Reset button -->
-        <div class="w-1/4 mt-4">
-            <button class="btn text-white btn-accent bg-[#0096FF]" id="resetBtn">Reset</button>
+    <!-- Priority filtering -->
+    <div class="w-1/4 mr-4">
+        <label for="priority_filter" class="block text-sm font-medium text-gray-700">Filter by Priority:</label>
+        <select id="priority_filter" name="priority_filter" style="height: 52px;" class="block w-full  px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <option value="">All Priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+    </div>
+    <!-- End of priority filtering -->
+    <!-- Due date -->
+    <div class="relative w-1/4 mr-4">
+        <label for="due_date_start" class="block text-sm font-medium text-gray-600">Due Date Start:</label>
+        <div class="flex items-center border rounded-md">
+            <input type="text" name="due_date_start" id="due_date_start" class="mt-1 h-12 block w-full px-3 rounded-md focus:outline-none" placeholder="Select Start Date" value="{{ old('due_date_start') }}">
+            <span id="datepicker-icon-start" class="absolute right-0 mr-2 cursor-pointer">
+                <i class="fas fa-calendar text-blue-500"></i>
+            </span>
         </div>
     </div>
+    <div class="relative w-1/4 mr-4">
+        <label for="due_date_end" class="block text-sm font-medium text-gray-600">Due Date End:</label>
+        <div class="flex items-center border rounded-md">
+            <input type="text" name="due_date_end" id="due_date_end" class="mt-1 h-12 block w-full px-3 rounded-md focus:outline-none" placeholder="Select End Date" value="{{ old('due_date_end') }}">
+            <span id="datepicker-icon-end" class="absolute right-0 mr-2 cursor-pointer">
+                <i class="fas fa-calendar text-blue-500"></i>
+            </span>
+        </div>
+    </div>
+
+    <!-- Custom searching -->
+    <div class="w-1/4 mr-4">
+        <label for="custom_search" class="block text-sm font-medium text-gray-700">Search:</label>
+        <input type="text" id="custom_search" style="height: 52px;" class="h-12 block w-full px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    </div>
+    <!-- End Custom searching -->
+    <!-- End due date filtering -->
+    <!-- Reset button -->
+    <div class="w-1/4 mt-4">
+        <button class="btn text-white bg-slate-700" id="resetBtn">Reset</button>
+    </div>
+</div>
+
 
 
     <div class="mb-4">
@@ -86,12 +88,12 @@
 
 
 <div class="max-w-full mx-auto mt-8 p-6 bg-white rounded-md shadow-md" id="DeleteData" style="display: none;">
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-2">
         <h2 class="text-2xl font-semibold">My Tasks</h2>
         @can('create task')
-        <div>
+        <div class="-mt-12">
             <a href="{{ route('task.create') }}">
-                <button class="btn h-10 w-44 bg-blue-500 hover:bg-blue-700 text-white">
+                <button class="btn h-10 w-44 bg-slate-700 hover:bg-blue-700 text-white">
                     <span class="mr-2">Create</span>
                     <img src="{{ asset('assets/images/svg/plus-solid.svg') }}" style="filter: invert(100%);" class="w-4" alt="">
                 </button>
@@ -102,7 +104,7 @@
     <!-- List and Deleted buttons -->
     <div class="mb-6">
         <button class="btn mr-4 toggle-btn" data-target="OrginalData">List</button>
-        <button class="btn toggle-btn text-white" data-target="DeleteData" style="background-color: #0096FF">Deleted</button>
+        <button class="btn toggle-btn text-white bg-slate-700" data-target="DeleteData">Deleted</button>
     </div>
 
     <!-- Delete data table -->
@@ -148,15 +150,18 @@
                 },
                 {
                     data: 'priority',
-                    name: 'priority'
+                    name: 'priority',
+                    className: 'text-center'
                 },
                 {
                     data: 'due_date',
-                    name: 'due_date'
+                    name: 'due_date',
+                    className: 'text-center'
                 },
                 {
                     data: 'actions',
                     name: 'actions',
+                    className: 'text-center',
                     orderable: false,
                     searchable: false
                 }
@@ -196,15 +201,18 @@
                             },
                             {
                                 data: 'priority',
-                                name: 'priority'
+                                name: 'priority',
+                                className: 'text-center'
                             },
                             {
                                 data: 'due_date',
-                                name: 'due_date'
+                                name: 'due_date',
+                                className: 'text-center'
                             },
                             {
                                 data: 'actions',
                                 name: 'actions',
+                                className: 'text-center',
                                 orderable: false,
                                 searchable: false
                             }

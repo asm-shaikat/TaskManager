@@ -904,7 +904,7 @@
                                     <span class="badge">New</span>
                                 </a>
                             </li>
-                            <li><a>Settings</a></li>
+                            <li><a href="{{ route('profile.update_password') }}">Change Password</li>
                             <form id="logout-form" method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <li onclick="confirmLogout()"><a>Logout</a></li>
