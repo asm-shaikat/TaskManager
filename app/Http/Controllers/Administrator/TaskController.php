@@ -179,11 +179,12 @@ class TaskController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {
+    {   
+        $users = User::all();
         $task = Task::findOrFail($id);
         $comments = $task->comments;
         $tags = Task::with('labels')->findOrFail($id);
-        return view('task.show', compact('task', 'comments','tags'));
+        return view('task.show', compact('users','task', 'comments','tags'));
     }
 
     /**
@@ -262,6 +263,18 @@ class TaskController extends Controller
 
     return redirect()->route('task.index')->with('success', 'Task updated successfully!');
 }
+
+    public function updateUserName(Request $request, Task $task)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $task->user->name = $request->name;
+        $task->user->save();
+
+        return response()->json(['message' => 'User name updated successfully'], 200);
+    }
 
     public function updateStatus(Request $request, Task $task)
     {

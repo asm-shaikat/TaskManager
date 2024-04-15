@@ -5,6 +5,18 @@
     <div class="w-3/4 ml-4">
         <div class="mb-4">
             <h3 class="text-2xl font-semibold inline-flex">{{ $task->title }}</h3>
+            <div class="dropdown inline-block relative">
+                <span class="block cursor-pointer" id="user-name" onclick="toggleDropdown()">@ {{ $task->user->name }}</span>
+                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                    <select id="user-select" class="form-select bg-white border" onchange="selectUser(this.value)">
+                        @foreach($users as $user)
+                        <option value="{{ $user->name }}" {{ $task->user->name === $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+
             <div class="mb-4">
                 <select id="status-select" class="form-select bg-white border" onchange="updateTaskStatus(this.value)">
                     <option value="todo" {{ $task->status === 'todo' ? 'selected' : '' }}>To Do</option>
@@ -52,7 +64,7 @@
             <div class="mb-4 relative w-1/3">
                 <label for="due_date" class="block text-sm font-medium text-gray-600">Due Date</label>
                 <div class="flex items-center border rounded-md">
-                <input type="text" name="due_date" id="datepicker" class="mt-1 p-2 rounded-md focus:outline-none" placeholder="Select Due Date" value="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}" onchange="updateTaskDueDate(this.value)">
+                    <input type="text" name="due_date" id="datepicker" class="mt-1 p-2 rounded-md focus:outline-none" placeholder="Select Due Date" value="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}" onchange="updateTaskDueDate(this.value)">
                     <span id="datepicker-icon" class="absolute right-0 mr-2 cursor-pointer">
                         <i class="fas fa-calendar text-green-500"></i>
                     </span>
@@ -239,5 +251,51 @@
         dateFormat: "Y-m-d",
     });
     // End Datepickr
+    // Show dropdown on click
+    document.getElementById('user-name').addEventListener('click', function() {
+        document.getElementById('user-dropdown').classList.toggle('hidden');
+    });
+
+    // Function to update user name via AJAX
+    function updateUserName(newName) {
+        var taskId = '{{ $task->id }}';
+        $.ajax({
+            type: 'PUT',
+            url: '/task/' + taskId + '/update-user-name',
+            data: {
+                _token: '{{ csrf_token() }}',
+                name: newName
+            },
+            success: function(response) {
+                // Update UI or show success message
+                document.getElementById('user-name').innerText = newName;
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+            }
+        });
+    }
+
+    // Assigning user
+    
+
+    function selectUser(userName) {
+        var taskId = '{{ $task->id }}';
+        $.ajax({
+            type: 'PUT',
+            url: '/task/' + taskId + '/update-user-name',
+            data: {
+                _token: '{{ csrf_token() }}',
+                name: userName
+            },
+            success: function(response) {
+                document.getElementById('user-name').innerText = userName;
+                toggleDropdown(); // Close the dropdown after selecting a user
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
 </script>
 @endsection
