@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -57,22 +58,25 @@ class UserProfileController extends Controller
         ]);
     }
 
-    public function updateNameEmail(Request $request, $id)
+    public function updateNameEmail(Request $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
         ]);
 
-        $user = Auth::user();
-
-        $user->name = $request->name;
-        $user->email = $request->email;
-
+        if ($request->hasFile('avatar')) {
+            $fileName = time() . '_' . uniqid() . '.' . $request->file('avatar')->getClientOriginalExtension();
+            $imagePath = $request->file('avatar')->storeAs('public/uploads/avatar', $fileName);
+            $user->avatar = 'avatar/' . $fileName;
+        }
         $user->save();
+
+        $user->update($data);
 
         return redirect()->back()->with('success', 'Name and email updated successfully!');
     }
+
 
     public function updatePassword(Request $request, $id)
     {

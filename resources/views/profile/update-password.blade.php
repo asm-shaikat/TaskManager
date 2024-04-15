@@ -8,6 +8,7 @@
         <form action="{{ route('profile.updatePassword', auth()->user()->id) }}" method="POST" class="space-y-4">
             @csrf
             @method('PUT')
+
             <!-- Old Password -->
             <div>
                 <label for="old_password" class="block font-medium">Old Password</label>

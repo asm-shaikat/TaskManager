@@ -209,7 +209,7 @@ class TaskController extends Controller
         'priority' => 'required|in:low,medium,high',
         'category' => 'required|in:work,personal',
         'due_date' => 'nullable|date',
-        'attachment' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+        'attachment' => 'nullable|file|mimes:jpeg,png,gif,pdf,doc,docx|max:2048',
         'lebel' => 'nullable|array',
         'lebel.*' => 'nullable|string|max:255',
     ]);
@@ -218,6 +218,14 @@ class TaskController extends Controller
         $task->status = $request->status;
     }
 
+     // Upload attachment if provided
+     if ($request->hasFile('attachment')) {
+        $fileName = $request->file('attachment')->getClientOriginalName();
+        $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
+        $task->attachment = 'attachment/' . $fileName;
+    }
+    
+    $task->save();
     // Update the task with validated data
     $task->update($validatedData);
 

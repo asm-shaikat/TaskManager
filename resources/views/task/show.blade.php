@@ -43,7 +43,7 @@
                 <textarea name="content" id="content" placeholder="type your comment" class="mt-1 p-2 w-full border rounded-md" required></textarea>
             </div>
 
-            <button class="btn btn-success w-full text-white">ADD Comment</button>
+            <button class="btn btn-success text-white">ADD Comment</button>
         </form>
     </div>
     <div>

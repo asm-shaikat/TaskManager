@@ -894,7 +894,7 @@
                     <div class="dropdown dropdown-end">
                         <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar border-blue-900">
                             <div class="w-10 rounded-full">
-                                <img alt="Avater" src="{{ asset('assets/images/avater.png') }}" />
+                                <img alt="Avater" src="{{  asset('storage/uploads/'.auth()->user()->avatar) }}" />
                             </div>
                         </div>
                         <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
