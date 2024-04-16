@@ -44,7 +44,8 @@
         <div class="mb-4">
             <div class="mb-4 flex items-center">
                 <h4 class="text-lg font-semibold mr-2">Priority:</h4>
-                <div class="flex items-center">
+                <span class="cursor-pointer bg-cyan-700 text-white badge inline" id="task-priority" onclick="toggleDropdownPriority()">{{ $task->priority }}</span>
+                <div id="priority-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                     <select id="priority-select" class="form-select bg-white border" onchange="updateTaskPriority(this.value)">
                         <option value="low" class="priority-low" {{ $task->priority === 'low' ? 'selected' : '' }}>Low</option>
                         <option value="medium" class="priority-medium" {{ $task->priority === 'medium' ? 'selected' : '' }}>Medium</option>
@@ -162,8 +163,7 @@
     // End of Update Status 
     // Update priority status
     // Show dropdown on click
-    document.getElementById('priority-select').addEventListener('click', function(event) {
-        event.stopPropagation(); // Stop the click event from propagating
+    document.getElementById('task-priority').addEventListener('click', function() {
         document.getElementById('priority-dropdown').classList.toggle('hidden');
     });
 
@@ -193,6 +193,14 @@
         var dropdown = document.getElementById('priority-dropdown');
         // Check if the clicked element is not part of the dropdown or select element
         if (!dropdown.contains(event.target) && event.target !== document.getElementById('priority-select')) {
+            dropdown.classList.add('hidden'); // Hide the dropdown
+        }
+    });
+
+    // Add an event listener to detect clicks outside of the dropdown
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('priority-dropdown');
+        if (!dropdown.contains(event.target) && event.target !== document.getElementById('task-priority')) {
             dropdown.classList.add('hidden'); // Hide the dropdown
         }
     });
@@ -278,26 +286,6 @@
         document.getElementById('user-dropdown').classList.toggle('hidden');
     });
 
-    // Function to update user name via AJAX
-    function updateUserName(newName) {
-        var taskId = '{{ $task->id }}';
-        $.ajax({
-            type: 'PUT',
-            url: '/task/' + taskId + '/update-user-name',
-            data: {
-                _token: '{{ csrf_token() }}',
-                name: newName
-            },
-            success: function(response) {
-                // Update UI or show success message
-                document.getElementById('user-name').innerText = newName;
-                toggleDropdown();
-            },
-            error: function(xhr, status, error) {
-                // Handle error
-            }
-        });
-    }
     // Assigning user
     function selectUser(userName) {
         var taskId = '{{ $task->id }}';
