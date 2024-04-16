@@ -5,20 +5,10 @@
     <div class="w-3/4 ml-4">
         <div class="mb-4">
             <h3 class="text-2xl font-semibold inline-flex">{{ $task->title }}</h3>
-            <div class="dropdown inline-block relative">
-                <span class="block cursor-pointer" id="user-name" onclick="toggleDropdown()">@ {{ $task->user->name }}</span>
-                <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                    <select id="user-select" class="form-select bg-white border" onchange="selectUser(this.value)">
-                        @foreach($users as $user)
-                        <option value="{{ $user->name }}" {{ $task->user->name === $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
 
 
             <div class="mb-4">
-                <select id="status-select" class="form-select bg-white border" onchange="updateTaskStatus(this.value)">
+                <select id="status-select" class="form-select bg-green-700 text-white badge" onchange="updateTaskStatus(this.value)">
                     <option value="todo" {{ $task->status === 'todo' ? 'selected' : '' }}>To Do</option>
                     <option value="backlog" {{ $task->status === 'backlog' ? 'selected' : '' }}>Backlog</option>
                     <option value="in_progress" {{ $task->status === 'in_progress' ? 'selected' : '' }}>In Progress</option>
@@ -39,17 +29,30 @@
             @endforeach
         </div>
 
+        <div class="dropdown inline-block relative">
+            <h4 class="text-lg font-semibold inline">Assigned to:</h4>
+            <span class="cursor-pointer bg-cyan-700 text-white badge inline" id="user-name" onclick="toggleDropdown()">{{ $task->user->name }}</span>
+            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                <select id="user-select" class="form-select bg-white border" onchange="selectUser(this.value)">
+                    @foreach($users as $user)
+                    <option value="{{ $user->name }}" {{ $task->user->name === $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
         <div class="mb-4">
             <div class="mb-4 flex items-center">
                 <h4 class="text-lg font-semibold mr-2">Priority:</h4>
                 <div class="flex items-center">
                     <select id="priority-select" class="form-select bg-white border" onchange="updateTaskPriority(this.value)">
-                        <option value="low" {{ $task->priority === 'low' ? 'selected' : '' }}>Low</option>
-                        <option value="medium" {{ $task->priority === 'medium' ? 'selected' : '' }}>Medium</option>
-                        <option value="high" {{ $task->priority === 'high' ? 'selected' : '' }}>High</option>
+                        <option value="low" class="priority-low" {{ $task->priority === 'low' ? 'selected' : '' }}>Low</option>
+                        <option value="medium" class="priority-medium" {{ $task->priority === 'medium' ? 'selected' : '' }}>Medium</option>
+                        <option value="high" class="priority-high" {{ $task->priority === 'high' ? 'selected' : '' }}>High</option>
                     </select>
                 </div>
             </div>
+
 
             <div class="mb-4 flex items-center">
                 <h4 class="text-lg font-semibold mr-2">Category:</h4>
@@ -158,8 +161,15 @@
     }
     // End of Update Status 
     // Update priority status
+    // Show dropdown on click
+    document.getElementById('priority-select').addEventListener('click', function(event) {
+        event.stopPropagation(); // Stop the click event from propagating
+        document.getElementById('priority-dropdown').classList.toggle('hidden');
+    });
+
+    // Function to update task priority via AJAX
     function updateTaskPriority(priority) {
-        var taskId = '{{ $task->id }}'; // Ensure taskId is a string
+        var taskId = '{{ $task->id }}';
         $.ajax({
             type: 'PUT',
             url: '/task/' + taskId + '/update-priority',
@@ -169,12 +179,24 @@
             },
             success: function(response) {
                 // Handle success response or UI update
+                document.getElementById('priority-select').value = priority; // Update the selected option
+                document.getElementById('priority-dropdown').classList.add('hidden'); // Hide the dropdown
             },
             error: function(xhr, status, error) {
                 // Handle error
             }
         });
     }
+
+    // Add an event listener to detect clicks outside of the priority dropdown
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('priority-dropdown');
+        // Check if the clicked element is not part of the dropdown or select element
+        if (!dropdown.contains(event.target) && event.target !== document.getElementById('priority-select')) {
+            dropdown.classList.add('hidden'); // Hide the dropdown
+        }
+    });
+
     // End of Update Status
     // Start Update Category
     function updateTaskCategory(category) {
@@ -269,16 +291,14 @@
             success: function(response) {
                 // Update UI or show success message
                 document.getElementById('user-name').innerText = newName;
+                toggleDropdown();
             },
             error: function(xhr, status, error) {
                 // Handle error
             }
         });
     }
-
     // Assigning user
-    
-
     function selectUser(userName) {
         var taskId = '{{ $task->id }}';
         $.ajax({
@@ -290,12 +310,21 @@
             },
             success: function(response) {
                 document.getElementById('user-name').innerText = userName;
-                toggleDropdown(); // Close the dropdown after selecting a user
+                toggleDropdown();
             },
             error: function(xhr, status, error) {
                 console.error(error);
             }
         });
     }
+
+    // Add an event listener to detect clicks outside of the dropdown
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('user-dropdown');
+        // Check if the clicked element is not part of the dropdown
+        if (!dropdown.contains(event.target) && event.target !== document.getElementById('user-name')) {
+            dropdown.classList.add('hidden'); // Hide the dropdown
+        }
+    });
 </script>
 @endsection
