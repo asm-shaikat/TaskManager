@@ -23,53 +23,62 @@ class TaskController extends Controller
 
 
     public function index(Request $request)
-    {
-        $query = Task::query();
+{
+    $query = Task::query();
+    $user = Auth()->user();
+    if (!auth()->user()->hasRole('administrator')) {
+        $query->where('user_id', auth()->id());
+    }
 
-        if (!auth()->user()->hasRole('administrator')) {
-            $query->where('user_id', auth()->id());
+    if ($request->has('show_deleted')) {
+        $query->onlyTrashed()->where('is_deleted', '=', 0)->with('user');
+    } else {
+        $query->with('user');
+    }
+
+    // Filter tasks by priority if the 'priority_filter' parameter is present
+    if ($request->has('priority_filter')) {
+        $priority = $request->input('priority_filter');
+        if (!empty($priority)) {
+            $query->where('priority', $priority);
         }
-
-        if ($request->has('show_deleted')) {
-            $query->onlyTrashed()->where('is_deleted', '=', 0)->with('user');
-        } else {
-            $query->with('user');
-        }
-
-        // Filter tasks by priority if the 'priority_filter' parameter is present
-        if ($request->has('priority_filter')) {
-            $priority = $request->input('priority_filter');
-            if (!empty($priority)) {
-                $query->where('priority', $priority);
-            }
-        }
+    }
 
 
-        if ($request->ajax()) {
-            return DataTables::of($query)
-                ->addColumn('actions', function ($task) use ($request) {
-                    if ($task->deleted_at) {
-                        return '
-                        <a href="' . route('task.restore',$task->id) . '" class="btn" style="background-color: cyan">
-                            <img src="' . asset('assets/images/svg/restore.svg') . '"class="w-4" alt="user-svg">
-                        </a>
-                        <form action="' . route('task.hardDelete', $task->id) . '" method="POST" style="display: inline;">
-                            ' . csrf_field() . '
-                            ' . method_field('PUT') . '
-                            <button type="submit" name="hard_delete" class="btn delete-btn" style="background-color: red">
-                                <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
-                            </button>
-                        </form>
-                        ';
-                    } else {
-                        // Task is not soft-deleted, provide regular delete button
-                        return '
+    if ($request->ajax()) {
+        return DataTables::of($query)
+            ->addColumn('actions', function ($task) use ($request, $user) {
+                if ($task->deleted_at) {
+                    return '
+                    <a href="' . route('task.restore',$task->id) . '" class="btn" style="background-color: cyan">
+                        <img src="' . asset('assets/images/svg/restore.svg') . '"class="w-4" alt="user-svg">
+                    </a>
+                    <form action="' . route('task.hardDelete', $task->id) . '" method="POST" style="display: inline;">
+                        ' . csrf_field() . '
+                        ' . method_field('PUT') . '
+                        <button type="submit" name="hard_delete" class="btn delete-btn" style="background-color: red">
+                            <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                        </button>
+                    </form>
+                    ';
+                } else {
+                    // Task is not soft-deleted, provide regular delete button
+                    if ($user->can('task list')) {
+                        $actions = '
                         <a href="' . route('task.show', $task->id) . '" class="btn" style="background-color: yellow;">
                             <img src="' . asset('assets/images/svg/eye-regular.svg') . '" class="w-4" alt="user-svg">
-                        </a>
+                        </a>';
+                    }
+                    if ($user->can('update task')) {
+                        $actions .= '
                         <a href="' . route('task.edit', $task->id) . '" class="btn bg-blue-500">
                             <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
-                        </a>
+                        </a>';
+                    }
+
+                    // Check if the user has the permission to delete the task
+                    if ($user->can('delete task')) {
+                        $actions .= '
                         <form action="' . route('task.destroy', $task->id) . '" method="POST" style="display: inline;">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
@@ -79,13 +88,17 @@ class TaskController extends Controller
                             </button>
                         </form>';
                     }
-                })
-                ->rawColumns(['actions'])
-                ->toJson();
-        }
 
-        return view('task.index');
+                    return $actions;
+                }
+            })
+            ->rawColumns(['actions'])
+            ->toJson();
     }
+
+    return view('task.index');
+}
+
 
 
 
