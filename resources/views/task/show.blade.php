@@ -78,14 +78,16 @@
 
 
             <div class="mb-4 relative w-1/3">
-                <label for="due_date" class="block text-sm font-medium text-gray-600">Due Date</label>
-                <div class="flex items-center border rounded-md">
-                    <input type="text" name="due_date" id="datepicker" class="mt-1 p-2 rounded-md focus:outline-none" placeholder="Select Due Date" value="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}" onchange="updateTaskDueDate(this.value)">
-                    <span id="datepicker-icon" class="absolute right-0 mr-2 cursor-pointer">
+                <label for="due_date" class="text-sm font-medium text-gray-600 inline">Due Date</label>
+                <span class="cursor-pointer badge bg-green-600 text-white inline" id="due-date-text" onclick="toggleDueDateDropdown()">{{ $task->due_date }}</span>
+                <div id="due-date-dropdown" class="hidden absolute mt-8 left-0 bg-white border rounded-md">
+                    <input type="text" name="due_date" id="datepicker" class="p-2 rounded-md focus:outline-none" placeholder="Select Due Date" value="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}" onchange="updateTaskDueDate(this.value)">
+                    <span id="datepicker-icon" class="absolute top-0 right-0 mr-2 mt-2 cursor-pointer">
                         <i class="fas fa-calendar text-green-500"></i>
                     </span>
                 </div>
             </div>
+
 
         </div>
         @if($task->attachment)
@@ -288,25 +290,6 @@
     });
 
     // Start due date
-    function updateTaskDueDate(dueDate) {
-        var taskId = '{{ $task->id }}';
-        $.ajax({
-            type: 'PUT',
-            url: '/task/' + taskId + '/update-due-date',
-            data: {
-                _token: '{{ csrf_token() }}',
-                due_date: dueDate
-            },
-            success: function(response) {
-                // Handle success response or UI update
-            },
-            error: function(xhr, status, error) {
-                // Handle error
-            }
-        });
-    }
-    // End due date
-
     // Datepickr
     var datepickerIcon = document.getElementById('datepicker-icon');
     datepickerIcon.addEventListener('click', function() {
@@ -317,6 +300,40 @@
         dateFormat: "Y-m-d",
     });
     // End Datepickr
+    document.getElementById('due-date-text').addEventListener('click', function() {
+        document.getElementById('due-date-dropdown').classList.toggle('hidden');
+    });
+
+    // Update task due date
+    function updateTaskDueDate(dueDate) {
+        var taskId = '{{ $task->id }}';
+        $.ajax({
+            type: 'PUT',
+            url: '/task/' + taskId + '/update-due-date',
+            data: {
+                _token: '{{ csrf_token() }}',
+                due_date: dueDate
+            },
+            success: function(response) {
+                document.getElementById('due-date-text').textContent = dueDate;
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+            }
+        });
+    }
+
+    // Hide due date input field on click outside
+    document.addEventListener('click', function(event) {
+        var dropdown = document.getElementById('due-date-dropdown');
+        // var badge = document.getElementById('due-date-dropdown');
+        // Check if the clicked element is not part of the dropdown or badge
+        if (!dropdown.contains(event.target) && event.target !== document.getElementById('due-date-text')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+    // End due date
+
     // Show dropdown on click
     document.getElementById('user-name').addEventListener('click', function() {
         document.getElementById('user-dropdown').classList.toggle('hidden');

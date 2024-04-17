@@ -96,6 +96,7 @@ class UserProfileController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
 
+        Auth::logout();
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
     /**
