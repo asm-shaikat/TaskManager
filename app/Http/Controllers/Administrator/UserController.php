@@ -19,69 +19,80 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        $authid = auth()->user()->id;
-        $taskInfo = DB::table('tasks')->where('user_id', $authid)->get();
-        $user_roles = Role::all();
-    
-        // Check if the request expects JSON response (for DataTables)
-        if(request()->ajax()) {
-            $query = User::query();
-    
-            // If 'show_deleted' parameter is present, include deleted users
-            if(request()->has('show_deleted')) {
-                $query->onlyTrashed()->where('is_deleted', '=', 0);
-            }
+{
+    $authid = auth()->user()->id;
+    $taskInfo = DB::table('tasks')->where('user_id', $authid)->get();
+    $user_roles = Role::all();
 
-            if ($request->has('role_filter')) {
-                $roleFilter = $request->input('role_filter');
-                // Filter users by role
-                if (!empty($roleFilter)) {
-                    $query->whereHas('roles', function ($q) use ($roleFilter) {
-                        $q->where('name', $roleFilter);
-                    }); 
-                }
-            }
-    
-            return DataTables::eloquent($query)
-                ->addColumn('role', function ($user) {
-                    $roles = $user->roles->pluck('name')->implode(', ');
-                    return $roles;
-                })
-                ->addColumn('actions', function ($user) {
-                    // Define actions based on whether the user is deleted or not
-                    if ($user->deleted_at) {
-                        return '
-                        <a href="' . route('users.restore',$user->id) . '" class="btn" style="background-color: cyan">
-                            <img src="' . asset('assets/images/svg/restore.svg') . '" " class="w-4" alt="user-svg">
-                        </a>
-                        <form action="' . route('users.hardDelete', $user->id) . '" method="POST" style="display: inline;">
-                            ' . csrf_field() . '
-                            ' . method_field('PUT') . '
-                            <button type="submit" name="hard_delete" class="btn delete-btn" style="background-color: red">
-                                <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
-                            </button>
-                        </form>
-                        ';
-                    } else {
-                        return '<a href="' . route('users.edit', $user->id) . '" class="btn bg-blue-500">
-                                <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
-                            </a>
-                            <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">
-                                '.csrf_field().'
-                                '.method_field('DELETE').'
-                                <button type="submit" class="btn delete-btn" style="background-color: red">
-                                    <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
-                                </button>
-                            </form>';
-                    }
-                })
-                ->rawColumns(['actions'])
-                ->toJson();
+    // Check if the request expects JSON response (for DataTables)
+    if(request()->ajax()) {
+        $query = User::query();
+
+        // If 'show_deleted' parameter is present, include deleted users
+        if(request()->has('show_deleted')) {
+            $query->onlyTrashed()->where('is_deleted', '=', 0);
         }
-    
-        return view('users.index', compact('taskInfo','user_roles'));
+
+        if ($request->has('role_filter')) {
+            $roleFilter = $request->input('role_filter');
+            // Filter users by role
+            if (!empty($roleFilter)) {
+                $query->whereHas('roles', function ($q) use ($roleFilter) {
+                    $q->where('name', $roleFilter);
+                }); 
+            }
+        }
+
+        return DataTables::eloquent($query)
+            ->addColumn('role', function ($user) {
+                $roles = $user->roles->pluck('name')->implode(', ');
+                return $roles;
+            })
+            ->addColumn('actions', function ($user) {
+                // Define actions based on whether the user is deleted or not
+                if ($user->deleted_at) {
+                    return '
+                    <a href="' . route('users.restore',$user->id) . '" class="btn" style="background-color: cyan">
+                        <img src="' . asset('assets/images/svg/restore.svg') . '" " class="w-4" alt="user-svg">
+                    </a>
+                    <form action="' . route('users.hardDelete', $user->id) . '" method="POST" style="display: inline;">
+                        ' . csrf_field() . '
+                        ' . method_field('PUT') . '
+                        <button type="submit" name="hard_delete" class="btn delete-btn" style="background-color: red">
+                            <img src="' . asset('assets/images/svg/trash-solid.svg') . '"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                        </button>
+                    </form>
+                    ';
+                } else {
+                    $actions = '';
+                    // Check if the user has the 'update user' permission
+                    if (auth()->user()->can('update user')) {
+                        $actions .= '
+                        <a href="' . route('users.edit', $user->id) . '" class="btn bg-blue-500">
+                            <img src="' . asset('assets/images/svg/pencil-solid.svg') . '" style="filter: invert(100%);" class="w-4" alt="user-svg">
+                        </a>';
+                    }
+                    // Check if the user has the 'delete user' permission
+                    if (auth()->user()->can('delete user')) {
+                        $actions .= '
+                        <form action="'.route('users.destroy', $user->id).'" method="POST" style="display: inline;">
+                            '.csrf_field().'
+                            '.method_field('DELETE').'
+                            <button type="submit" class="btn delete-btn" style="background-color: red">
+                                <img src="'.asset('assets/images/svg/trash-solid.svg').'"  class="w-4" style="filter: invert(100%);" alt="user-svg">
+                            </button>
+                        </form>';
+                    }
+                    return $actions;
+                }
+            })
+            ->rawColumns(['actions'])
+            ->toJson();
     }
+
+    return view('users.index', compact('taskInfo','user_roles'));
+}
+
     
 
     /**
