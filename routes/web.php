@@ -12,6 +12,7 @@ use Illuminate\Routing\RouteRegistrar;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\Models\Permission as ModelsPermission;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,15 @@ use Spatie\Permission\Models\Permission as ModelsPermission;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/clear-cache', function () {
+    Artisan::call('optimize:clear');
+    return 'Cache cleared successfully!';
+});
+
+Route::get('/create-storage-link', function () {
+    Artisan::call('storage:link');
+    return 'Storage link created successfully!';
+});
 
 Route::get('/', function () {
     return redirect()->route('login');
