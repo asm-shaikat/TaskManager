@@ -42,6 +42,7 @@ class UserController extends Controller
                 }); 
             }
         }
+        $query->orderBy('created_at', 'desc');
 
         return DataTables::eloquent($query)
             ->addColumn('role', function ($user) {

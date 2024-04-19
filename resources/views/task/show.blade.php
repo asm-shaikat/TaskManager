@@ -79,7 +79,11 @@
 
             <div class="mb-4 relative w-1/3">
                 <label for="due_date" class="text-sm font-medium text-gray-600 inline">Due Date</label>
+                @if($task->due_date)
                 <span class="cursor-pointer badge bg-slate-600 text-white inline" id="due-date-text" onclick="toggleDueDateDropdown()">{{ $task->due_date }}</span>
+                @else
+                <span class="cursor-pointer badge bg-slate-600 text-white inline" id="due-date-text" onclick="toggleDueDateDropdown()">Select Date</span>
+                @endif
                 <div id="due-date-dropdown" class="hidden absolute mt-8 left-0 bg-white border rounded-md">
                     <input type="text" name="due_date" id="datepicker" class="p-2 rounded-md focus:outline-none" placeholder="Select Due Date" value="{{ $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}" onchange="updateTaskDueDate(this.value)">
                     <span id="datepicker-icon" class="absolute top-0 right-0 mr-2 mt-2 cursor-pointer">

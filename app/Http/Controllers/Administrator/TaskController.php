@@ -43,7 +43,8 @@ class TaskController extends Controller
             $query->where('priority', $priority);
         }
     }
-
+    
+    $query->orderBy('due_date', 'desc');
 
     if ($request->ajax()) {
         return DataTables::of($query)

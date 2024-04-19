@@ -22,49 +22,49 @@
         <button class="btn toggle-btn" data-target="DeleteData">Deleted</button>
     </div>
     <div class="flex mb-4 items-center">
-    <!-- Priority filtering -->
-    <div class="w-1/4 mr-4">
-        <label for="priority_filter" class="block text-sm font-medium text-gray-700">Filter by Priority:</label>
-        <select id="priority_filter" name="priority_filter" style="height: 52px;" class="block w-full  px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <option value="">All Priorities</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
-    </div>
-    <!-- End of priority filtering -->
-    <!-- Due date -->
-    <div class="relative w-1/4 mr-4">
-        <label for="due_date_start" class="block text-sm font-medium text-gray-600">Due Date Start:</label>
-        <div class="flex items-center border rounded-md">
-            <input type="text" name="due_date_start" id="due_date_start" class="mt-1 h-12 block w-full px-3 rounded-md focus:outline-none" placeholder="Select Start Date" value="{{ old('due_date_start') }}">
-            <span id="datepicker-icon-start" class="absolute right-0 mr-2 cursor-pointer">
-                <i class="fas fa-calendar text-blue-500"></i>
-            </span>
+        <!-- Priority filtering -->
+        <div class="w-1/4 mr-4">
+            <label for="priority_filter" class="block text-sm font-medium text-gray-700">Filter by Priority:</label>
+            <select id="priority_filter" name="priority_filter" style="height: 52px;" class="block w-full  px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <option value="">All Priorities</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
         </div>
-    </div>
-    <div class="relative w-1/4 mr-4">
-        <label for="due_date_end" class="block text-sm font-medium text-gray-600">Due Date End:</label>
-        <div class="flex items-center border rounded-md">
-            <input type="text" name="due_date_end" id="due_date_end" class="mt-1 h-12 block w-full px-3 rounded-md focus:outline-none" placeholder="Select End Date" value="{{ old('due_date_end') }}">
-            <span id="datepicker-icon-end" class="absolute right-0 mr-2 cursor-pointer">
-                <i class="fas fa-calendar text-blue-500"></i>
-            </span>
+        <!-- End of priority filtering -->
+        <!-- Due date -->
+        <div class="relative w-1/4 mr-4">
+            <label for="due_date_start" class="block text-sm font-medium text-gray-600">Due Date Start:</label>
+            <div class="flex items-center border rounded-md">
+                <input type="text" name="due_date_start" id="due_date_start" class="mt-1 h-12 block w-full px-3 rounded-md focus:outline-none" placeholder="Select Start Date" value="{{ old('due_date_start') }}">
+                <span id="datepicker-icon-start" class="absolute right-0 mr-2 cursor-pointer">
+                    <i class="fas fa-calendar text-slate-600"></i>
+                </span>
+            </div>
         </div>
-    </div>
+        <div class="relative w-1/4 mr-4">
+            <label for="due_date_end" class="block text-sm font-medium text-gray-600">Due Date End:</label>
+            <div class="flex items-center border rounded-md">
+                <input type="text" name="due_date_end" id="due_date_end" class="mt-1 h-12 block w-full px-3 rounded-md focus:outline-none" placeholder="Select End Date" value="{{ old('due_date_end') }}">
+                <span id="datepicker-icon-end" class="absolute right-0 mr-2 cursor-pointer">
+                    <i class="fas fa-calendar text-slate-600"></i>
+                </span>
+            </div>
+        </div>
 
-    <!-- Custom searching -->
-    <div class="w-1/4 mr-4">
-        <label for="custom_search" class="block text-sm font-medium text-gray-700">Search:</label>
-        <input type="text" id="custom_search" style="height: 52px;" class="h-12 block w-full px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        <!-- Custom searching -->
+        <div class="w-1/4 mr-4">
+            <label for="custom_search" class="block text-sm font-medium text-gray-700">Search:</label>
+            <input type="text" id="custom_search" style="height: 52px;" class="h-12 block w-full px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <!-- End Custom searching -->
+        <!-- End due date filtering -->
+        <!-- Reset button -->
+        <div class="w-1/4 mt-4">
+            <button class="btn text-white bg-slate-700" id="resetBtn">Reset</button>
+        </div>
     </div>
-    <!-- End Custom searching -->
-    <!-- End due date filtering -->
-    <!-- Reset button -->
-    <div class="w-1/4 mt-4">
-        <button class="btn text-white bg-slate-700" id="resetBtn">Reset</button>
-    </div>
-</div>
 
 
 
@@ -110,7 +110,7 @@
 
     <!-- Delete data table -->
     <div class="mb-4">
-        <table class="min-w-full divide-y divide-gray-200" id="deletedTable">
+        <table class="min-w-full  divide-y divide-gray-200" id="deletedTable">
             <thead class="bg-gray-100">
                 <tr>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
@@ -152,12 +152,21 @@
                 {
                     data: 'priority',
                     name: 'priority',
-                    className: 'text-center'
+                    className: 'text-center capitalize'
                 },
                 {
                     data: 'status',
                     name: 'status',
-                    className: 'text-center'
+                    render: function(data, type, row) {
+                        if (data === "in_progress") {
+                            return "In Progress";
+                        }
+                        if (data === "in_review") {
+                            return "In Review";
+                        }
+                        return data;
+                    },
+                    className: 'text-center capitalize'
                 },
                 {
                     data: 'due_date',

@@ -58,14 +58,12 @@
         <div class="mb-4">
             <label for="status" class="block text-sm font-medium text-gray-600">Status</label>
             <select name="status" id="status" class="mt-1 p-2 w-full border rounded-md js-example-basic-single">
-                <option value="assigned" {{ old('status', $task->status) === 'assigned' ? 'selected' : '' }}>Open/Assigned</option>
-                <option value="in_progress" {{ old('status', $task->status) === 'in_progress' ? 'selected' : '' }}>In Progress</option>
-                <option value="on_hold" {{ old('status', $task->status) === 'on_hold' ? 'selected' : '' }}>On Hold</option>
-                <option value="completed" {{ old('status', $task->status) === 'completed' ? 'selected' : '' }}>Completed</option>
-                <option value="closed" {{ old('status', $task->status) === 'closed' ? 'selected' : '' }}>Closed</option>
-                <option value="cancelled" {{ old('status', $task->status) === 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                <option value="pending_review" {{ old('status', $task->status) === 'pending_review' ? 'selected' : '' }}>Pending Review</option>
-                <option value="deferred" {{ old('status', $task->status) === 'deferred' ? 'selected' : '' }}>Deferred</option>
+                <option value="To Do" {{ old('status', $task->status) === 'To Do' ? 'selected' : '' }}>To Do</option>
+                <option value="In Progress" {{ old('status', $task->status) === 'In Progress' ? 'selected' : '' }}>In Progress</option>
+                <option value="In Review" {{ old('status', $task->status) === 'In Review' ? 'selected' : '' }}>In Review</option>
+                <option value="Done" {{ old('status', $task->status) === 'Done' ? 'selected' : '' }}>Done</option>
+                <option value="Achieved" {{ old('status', $task->status) === 'Achieved' ? 'selected' : '' }}>Achieved</option>
+                <option value="Backlog" {{ old('status', $task->status) === 'Backlog' ? 'selected' : '' }}>Backlog</option>
             </select>
         </div>
 
