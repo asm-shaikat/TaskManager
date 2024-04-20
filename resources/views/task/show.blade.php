@@ -8,7 +8,13 @@
 
 
             <div class="dropdown inline-block relative">
-                <span class="cursor-pointer badge bg-green-600 text-white inline" id="status-name" onclick="toggleStatusDropdown()">{{ ucfirst($task->status) }}</span>
+                @if($task->status==="in_progress")
+                <span class="cursor-pointer badge bg-green-600 text-white inline" id="status-name" onclick="toggleStatusDropdown()">In Progress</span>
+                @elseif($task->status==="in_review")
+                <span class="cursor-pointer badge bg-green-600 text-white inline" id="status-name" onclick="toggleStatusDropdown()">In Review</span>
+                @else
+                <span class="cursor-pointer badge bg-green-600 text-white inline capitalize" id="status-name" onclick="toggleStatusDropdown()">{{ $task->status }}</span>
+                @endif
                 <div id="status-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
                     <select id="status-select" class="form-select bg-slate-600 text-white border" onchange="selectStatus(this.value)">
                         <option value="todo" {{ $task->status === 'todo' ? 'selected' : '' }}>To Do</option>
