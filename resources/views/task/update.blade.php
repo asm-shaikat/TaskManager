@@ -58,12 +58,12 @@
         <div class="mb-4">
             <label for="status" class="block text-sm font-medium text-gray-600">Status</label>
             <select name="status" id="status" class="mt-1 p-2 w-full border rounded-md js-example-basic-single">
-                <option value="To Do" {{ old('status', $task->status) === 'To Do' ? 'selected' : '' }}>To Do</option>
-                <option value="In Progress" {{ old('status', $task->status) === 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                <option value="In Review" {{ old('status', $task->status) === 'In Review' ? 'selected' : '' }}>In Review</option>
-                <option value="Done" {{ old('status', $task->status) === 'Done' ? 'selected' : '' }}>Done</option>
-                <option value="Achieved" {{ old('status', $task->status) === 'Achieved' ? 'selected' : '' }}>Achieved</option>
-                <option value="Backlog" {{ old('status', $task->status) === 'Backlog' ? 'selected' : '' }}>Backlog</option>
+                <option value="todo" {{ old('status', $task->status) === 'todo' ? 'selected' : '' }}>To Do</option>
+                <option value="in_progress" {{ old('status', $task->status) === 'in_progress' ? 'selected' : '' }}>In Progress</option>
+                <option value="in_review" {{ old('status', $task->status) === 'in_review' ? 'selected' : '' }}>In Review</option>
+                <option value="done" {{ old('status', $task->status) === 'done' ? 'selected' : '' }}>Done</option>
+                <option value="achieved" {{ old('status', $task->status) === 'achieved' ? 'selected' : '' }}>Achieved</option>
+                <option value="backlog" {{ old('status', $task->status) === 'backlog' ? 'selected' : '' }}>Backlog</option>
             </select>
         </div>
 
@@ -97,7 +97,7 @@
 
         @if($task->attachment)
         <div class="mb-4">
-            <img id="attachment-preview" src="{{ asset('storage/uploads/'.$task->attachment) }}" class="h-60 w-full" alt="">
+            <img id="attachment-preview" src="{{ asset('storage/'.$task->attachment) }}" class="h-60 w-full" alt="">
         </div>
         @else
         <div class="mb-4">

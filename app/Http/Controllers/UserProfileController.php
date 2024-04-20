@@ -67,8 +67,8 @@ class UserProfileController extends Controller
 
         if ($request->hasFile('avatar')) {
             $fileName = time() . '_' . uniqid() . '.' . $request->file('avatar')->getClientOriginalExtension();
-            $imagePath = $request->file('avatar')->storeAs('public/uploads/avatar', $fileName);
-            $user->avatar = 'avatar/' . $fileName;
+            $imagePath = $request->file('avatar')->storeAs('uploads/avatar', $fileName);
+            $user->avatar = $imagePath;
         }
         $user->save();
 

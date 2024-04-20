@@ -102,7 +102,7 @@
         </div>
         @if($task->attachment)
         <div class="mb-4">
-            <img id="attachment-preview" src="{{ asset('storage/uploads/'.$task->attachment) }}" class="h-60 w-full" alt="">
+            <img id="attachment-preview" src="{{ asset('storage/'.$task->attachment) }}" class="h-60 w-full" alt="">
         </div>
         @endif
         <form action="{{ route('comments.store') }}" method="post" enctype="multipart/form-data">
@@ -176,7 +176,7 @@
         var taskId = '{{ $task->id }}';
         $.ajax({
             type: 'PUT',
-            url: '/task/' + taskId,
+            url: '/task/' + taskId + '/status',
             data: {
                 _token: '{{ csrf_token() }}',
                 status: status

@@ -9,9 +9,8 @@
         <form action="{{ route('profile.updateNameEmail', auth()->user()->id) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             @method('PUT')
-
             <div class="w-full flex justify-center">
-                <img id="avatarPreview" class="mt-2 border  border-slate-700 rounded-full shadow-xl" src="{{ auth()->user()->avatar ? asset('storage/uploads/'.auth()->user()->avatar) : asset('assets/images/avater.png') }}" alt="Avatar" style="max-width: 100px;">
+                <img id="avatarPreview" class="mt-2 border border-slate-700 rounded-full shadow-xl" src="{{ auth()->user()->avatar ? asset('storage/'.auth()->user()->avatar) : asset('assets/images/avatar.png') }}" alt="Avatar" style="max-width: 100px;">
             </div>
 
             <div>

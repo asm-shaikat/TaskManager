@@ -139,8 +139,8 @@ class TaskController extends Controller
          // Upload attachment if provided
          if ($request->hasFile('attachment')) {
              $fileName = $request->file('attachment')->getClientOriginalName();
-             $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
-             $task->attachment = 'attachment/' . $fileName;
+             $imagePath = $request->file('attachment')->storeAs('uploads/attachment', $fileName);
+             $task->attachment = $imagePath;
          }
      
          // Save the task
@@ -235,8 +235,8 @@ class TaskController extends Controller
      // Upload attachment if provided
      if ($request->hasFile('attachment')) {
         $fileName = time() . '_' . uniqid() . '.' . $request->file('attachment')->getClientOriginalExtension();
-        $imagePath = $request->file('attachment')->storeAs('public/uploads/attachment', $fileName);
-        $task->attachment = 'attachment/' . $fileName;
+        $imagePath = $request->file('attachment')->storeAs('uploads/attachment', $fileName);
+        $task->attachment = $imagePath;
     }
     
     $task->save();
